@@ -1,0 +1,10 @@
+{
+    "name": "DMFolders",
+    "version": "0.2.1",
+    "license": "MIT",
+    "source": "https://example.com/gitRepo",
+    "updateUrl": "https://example.com/gitRepo",
+    "main": "index.tsx",
+    "author": "A user",
+    "description": "Rewrite of the plugin \"Timezones\" using the Temporal API"
+}

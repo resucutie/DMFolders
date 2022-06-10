@@ -1,0 +1,15 @@
+{
+    "name": "dmfolders",
+    "version": "1.0.0",
+    "description": "meep",
+    "scripts": {
+        "build": "ittai --betterdiscord=\"C:/Users/auser/AppData/Roaming/BetterDiscord/plugins\"",
+        "watch": "ittai --betterdiscord=\"C:/Users/auser/AppData/Roaming/BetterDiscord/plugins\" --watch",
+        "production": "ittai --betterdiscord=\"C:/Users/auser/AppData/Roaming/BetterDiscord/plugins\" --production"
+    },
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/react": "^18.0.11"
+    }
+}

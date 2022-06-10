@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "outDir": "./.ts", // https://stackoverflow.com/questions/42609768/typescript-error-cannot-write-file-because-it-would-overwrite-input-file
+        "module": "ES6",
+        "target": "ES2021",
+        "allowJs": true,
+        "checkJs": false,
+        "jsx": "react",
+        "rootDir": "./",
+        "removeComments": false,
+        "noEmit": false,
+        "pretty": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strict": true,
+        "moduleResolution": "Node",
+        "esModuleInterop": true
+    },
+    "include": [
+        "./"
+    ],
+    "exclude": [
+        "node_modules",
+        "./.ts/**/*" // https://stackoverflow.com/questions/42609768/typescript-error-cannot-write-file-because-it-would-overwrite-input-file
+    ]
+}
