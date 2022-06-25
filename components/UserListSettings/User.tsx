@@ -1,14 +1,14 @@
 import { UserID, UserObject } from "ittai"
 
 import * as webpack from "ittai/webpack"
-import { Users } from "ittai/stores"
-import { Avatar } from "ittai/components"
-import { Button, TextInput, Flex } from "ittai/components"
-import pinnedDMS from "../../handlers/pinnedDMS"
 const { React, React: {
     useState,
     useEffect,
 } } = webpack
+import { Users } from "ittai/stores"
+import { Avatar, DiscordIcon } from "ittai/components"
+import { Button, Text, Flex } from "ittai/components"
+import classes from "../../utils/classes"
 
 interface Props {
     id: UserID,
@@ -28,29 +28,69 @@ export default function({ id, onMove, onRemove, disableUp = false, disableDown =
     })
     
     return (
-        <Flex align={Flex.Align.CENTER}>
-            <Avatar src={(user?.getAvatarURL(false, true) as string)?.replace("?size=16", "")} size={Avatar.Sizes.SIZE_24}/>
-            <div>{user?.username}</div>
-            <Button
-                size={Button.Sizes.ICON}
-                onClick={() => onMove("up")}
-                disabled={disableUp}
+        <Flex
+            align={Flex.Align.CENTER}
+            className={classes.ServerMembers.member}
+        >
+            <div className={classes.ServerMembers.avatar}>
+                <Avatar
+                    src={(user?.getAvatarURL(false, true) as string)?.replace(
+                        "?size=16",
+                        ""
+                    )}
+                    size={Avatar.Sizes.SIZE_40}
+                />
+            </div>
+            <div className={classes.ServerMembers.nameTag}>
+                <div className={classes.ServerMembers.name}>
+                    {user?.username}
+                </div>
+                <Text color={Text.Colors.MUTED} size={Text.Sizes.SIZE_14}>
+                    @{user?.username}#{user?.discriminator}
+                </Text>
+            </div>
+            <Flex
+                direction={Flex.Direction.VERTICAL}
+                grow={0}
+                shrink={0}
+                style={{ marginLeft: "auto" }}
             >
-                UP
-            </Button>
-            <Button
-                size={Button.Sizes.ICON}
-                onClick={() => onMove("down")}
-                disabled={disableDown}
-            >
-                DOWN
-            </Button>
+                <Button
+                    size={Button.Sizes.ICON}
+                    onClick={() => onMove("up")}
+                    disabled={disableUp}
+                    look={Button.Looks.BLANK}
+                    className={[
+                        classes.AccountControlButtons.button,
+                        disableUp
+                            ? classes.AccountControlButtons.disabled
+                            : classes.AccountControlButtons.enabled,
+                    ].join(" ")}
+                >
+                    <DiscordIcon name="ArrowDropUp" />
+                </Button>
+                <Button
+                    size={Button.Sizes.ICON}
+                    onClick={() => onMove("down")}
+                    disabled={disableDown}
+                    look={Button.Looks.BLANK}
+                    className={[
+                        classes.AccountControlButtons.button,
+                        disableDown
+                            ? classes.AccountControlButtons.disabled
+                            : classes.AccountControlButtons.enabled,
+                    ].join(" ")}
+                >
+                    <DiscordIcon name="ArrowDropDown" />
+                </Button>
+            </Flex>
             <Button
                 size={Button.Sizes.ICON}
                 color={Button.Colors.RED}
                 onClick={onRemove}
+                look={Button.Looks.LINK}
             >
-                X
+                <DiscordIcon name="Trash" />
             </Button>
         </Flex>
     )

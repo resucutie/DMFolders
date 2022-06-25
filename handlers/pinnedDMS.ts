@@ -1,6 +1,6 @@
 import * as settings from "ittai/settings"
 import { Dispatcher, React } from "ittai/webpack"
-import type { PinnedDMS } from "../types"
+import type { Category, ColorHex, PinnedDMS } from "../types"
 
 export const getAll = (): PinnedDMS => {
     return settings.get("pinnedCategories", {})
@@ -22,7 +22,7 @@ export const getColor = (category: string) => {
     let pinnedCategories = getAll()
 
     if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
-    return pinnedCategories[category].color as string
+    return pinnedCategories[category].color as ColorHex | "default"
 }
 
 export const setRaw = (setting: PinnedDMS) => {
@@ -31,13 +31,24 @@ export const setRaw = (setting: PinnedDMS) => {
     Dispatcher.dirtyDispatch({ type: "PINDMS_CHANGE_LIST" })
 }
 
-export const addCategory = (category: string, userIDs?: Array<import("ittai").UserID>) => {
+export const addCategory = (category: string, settings: Category = {
+    color: "default",
+    users: []
+}) => {
     let pinnedCategories = getAll()
-    pinnedCategories[category] = {
-        color: "default",
-        users: userIDs ?? []
-    }
+    pinnedCategories[category] = settings
     
+    setRaw(pinnedCategories)
+}
+
+export const renameCategory = (oldCategoryName: string, newCategoryName: string) => {
+    let pinnedCategories = getAll()
+    console.log(pinnedCategories)
+    Object.defineProperty(pinnedCategories, newCategoryName, Object.getOwnPropertyDescriptor(pinnedCategories, oldCategoryName)!);
+    console.log(pinnedCategories)
+    delete pinnedCategories[oldCategoryName];
+    console.log(pinnedCategories)
+
     setRaw(pinnedCategories)
 }
 
@@ -50,11 +61,8 @@ export const removeCategory = (category: string) => {
     setRaw(pinnedCategories)
 }
 
-export const setColor = (
-    category: string,
-    color: string
-    ) => {
-        let pinnedCategories = getAll()
+export const setColor = (category: string, color: ColorHex | "default") => {
+    let pinnedCategories = getAll()
         
     if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
     pinnedCategories[category].color = color
@@ -109,6 +117,7 @@ export default {
     getColor,
     setRaw,
     addCategory,
+    renameCategory,
     removeCategory,
     setColor,
     setUserList,

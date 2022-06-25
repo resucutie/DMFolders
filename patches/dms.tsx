@@ -11,38 +11,50 @@ const ListSectionItem = webpack.findByDisplayName("ListSectionItem")
 const { DirectMessage } = webpack.findByProps("DirectMessage")
 
 export default function() {
+    let PinDMSRender = () => <CurrentLists />
+    //@ts-ignore
+    PinDMSRender.displayName = "PinnedDMS"
+
+    function PatchedPrivateChannelsList() {
+        //@ts-ignore
+        console.log("meep", this)
+        //@ts-ignore
+        const ret = this.props.original.call(this, this.props)
+        fistPatch = true
+        console.log("r", ret)
+        return ret
+    }
+
+    let fistPatch = false
+    
     patcher.after("DMPatch", webpack.find(m => m?.default?.displayName === "ConnectedPrivateChannelsList"), "default", ([props], res, _this) => {
         console.log({props, res, _this})
-        useListUpdate()
+        useListUpdate() //temporary, will remove later
         
-        let PrivateChannelsList: {
-            props: {
-                children: React.ReactNode[]
-                privateChannelIds: string[]
-            }
-        } = findInReactTree(
-            res,
-            (m: { type: { displayName: string } }) =>
-                m?.type?.displayName === "PrivateChannelsList"
-        ) as any
+        let PrivateChannelsList: {props: {children: React.ReactNode[], privateChannelIds: string[]}, type: any} = findInReactTree(res, (m: { type: { displayName: string } }) => m?.type?.displayName === "PrivateChannelsList") as any
         if (PrivateChannelsList == null) return
 
-        Object.values(pinnedDMS.getAll())
-            .forEach(({users}) => {
-                PrivateChannelsList.props.privateChannelIds =
-                    PrivateChannelsList.props.privateChannelIds.filter(
-                        (id) => !users.map(id => Channels.getDMFromUserId(id)).includes(id)
-                    )
-            })
+        Object.values(pinnedDMS.getAll()).forEach(({users}) => {
+            const dmChannels = users.map(id => Channels.getDMFromUserId(id))
+            PrivateChannelsList.props.privateChannelIds =
+                PrivateChannelsList.props.privateChannelIds.filter(
+                    (id) => !dmChannels.includes(id)
+                )
+        })
+
+        const ogFunc = PrivateChannelsList.type.prototype.render
+        if (ogFunc == null) return
+        Object.assign(PrivateChannelsList.props, {
+            original: ogFunc,
+        })
+        // if(!fistPatch) PrivateChannelsList.type.prototype.render = PatchedPrivateChannelsList
+        
 
 
         if (PrivateChannelsList.props.children.find(
             (m: any) => m?.type?.displayName === "PinnedDMS"
         )) return
-        
-        let PinDMSRender = () => <CurrentLists />
-        //@ts-ignore
-        PinDMSRender.displayName = "PinnedDMS"
+
         PrivateChannelsList.props.children.push(<PinDMSRender />)
         
         console.log(PrivateChannelsList)
@@ -50,12 +62,14 @@ export default function() {
 }
 
 const CurrentLists = () => {
+    useListUpdate()
+
     return (
         <div>
             {pinnedDMS.getCategories().map((category) => (
                 <>
                     <ListSectionItem
-                        className={classes.privateChannelsHeaderContainer}
+                        className={classes.PrivateChannelsHeaderContainer.privateChannelsHeaderContainer}
                     >
                         <span
                             style={{ color: pinnedDMS.getColor(category) }}
