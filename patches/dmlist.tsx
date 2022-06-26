@@ -17,18 +17,18 @@ export default function() {
 
     function PatchedPrivateChannelsList() {
         //@ts-ignore
-        console.log("meep", this)
+        // console.log("meep", this)
         //@ts-ignore
         const ret = this.props.original.call(this, this.props)
         fistPatch = true
-        console.log("r", ret)
+        // console.log("r", ret)
         return ret
     }
 
     let fistPatch = false
     
-    patcher.after("DMPatch", webpack.find(m => m?.default?.displayName === "ConnectedPrivateChannelsList"), "default", ([props], res, _this) => {
-        console.log({props, res, _this})
+    patcher.after("DMListPatch", webpack.find(m => m?.default?.displayName === "ConnectedPrivateChannelsList"), "default", ([props], res, _this) => {
+        // console.log({props, res, _this})
         useListUpdate() //temporary, will remove later
         
         let PrivateChannelsList: {props: {children: React.ReactNode[], privateChannelIds: string[]}, type: any} = findInReactTree(res, (m: { type: { displayName: string } }) => m?.type?.displayName === "PrivateChannelsList") as any
@@ -57,7 +57,7 @@ export default function() {
 
         PrivateChannelsList.props.children.push(<PinDMSRender />)
         
-        console.log(PrivateChannelsList)
+        // console.log(PrivateChannelsList)
     })
 }
 

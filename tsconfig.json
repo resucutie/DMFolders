@@ -14,7 +14,7 @@
         "sourceMap": true,
         "strict": true,
         "moduleResolution": "Node",
-        "esModuleInterop": true
+        "esModuleInterop": true,
     },
     "include": [
         "./"

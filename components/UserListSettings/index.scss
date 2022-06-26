@@ -1,0 +1,17 @@
+.exampleListSectionItem {
+    padding: 0;
+    width: auto;
+    flex: unset;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.userList {
+    background: var(--background-secondary-alt);
+    margin-top: 10px;
+    padding-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden auto;
+    max-height: 40vh;
+    position: relative;
+}

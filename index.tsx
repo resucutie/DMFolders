@@ -7,7 +7,8 @@ import * as webpack from "ittai/webpack"
 const { React } = webpack
 
 import Settings from "./components/Settings"
-import patchDms from "./patches/dms"
+import patchDmList from "./patches/dmlist"
+import patchDmButton from "./patches/dmbutton"
 
 const Uh = () => {
     return <div>boo</div>
@@ -20,7 +21,8 @@ export default class DMFolders extends Plugin {
         //@ts-ignore internal usage only
         globalThis.searchClassNameModules = searchClassNameModules
         
-        patchDms()
+        patchDmList()
+        patchDmButton()
 
         // patcher.after(
         //     "DMPatch",

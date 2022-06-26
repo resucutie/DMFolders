@@ -11,6 +11,10 @@ export const getCategories = (): string[] => {
     return pinnedCategories
 }
 
+export const getCategory = (category: string): Category => {
+    return getAll()[category]
+}
+
 export const getUsers = (category: string) => {
     const pinnedCategories = getAll()
     if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
@@ -43,11 +47,11 @@ export const addCategory = (category: string, settings: Category = {
 
 export const renameCategory = (oldCategoryName: string, newCategoryName: string) => {
     let pinnedCategories = getAll()
-    console.log(pinnedCategories)
+    // console.log(pinnedCategories)
     Object.defineProperty(pinnedCategories, newCategoryName, Object.getOwnPropertyDescriptor(pinnedCategories, oldCategoryName)!);
-    console.log(pinnedCategories)
+    // console.log(pinnedCategories)
     delete pinnedCategories[oldCategoryName];
-    console.log(pinnedCategories)
+    // console.log(pinnedCategories)
 
     setRaw(pinnedCategories)
 }
@@ -79,6 +83,8 @@ export const setUserList = (category: string, userList: string[]) => {
 }
 
 export const addUser = (category: string, userID: import("ittai").UserID) => {
+    if (typeof userID !== "string") throw new Error(`Invalid User ID`)
+
     let pinnedCategories = getAll()
     if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
 
@@ -89,6 +95,8 @@ export const addUser = (category: string, userID: import("ittai").UserID) => {
 }
 
 export const removeUser = (category: string, userID: import("ittai").UserID) => {
+    if (typeof userID !== "string") throw new Error(`Invalid User ID`)
+    
     let pinnedCategories = getAll()
     if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
 
@@ -96,6 +104,18 @@ export const removeUser = (category: string, userID: import("ittai").UserID) => 
     userList = userList.filter((user) => user !== userID)
     
     setUserList(category, userList)
+}
+
+export const isUserAdded = (userID: import("ittai").UserID) => {
+    return Object.values(getAll()).some(({ users }) => users.includes(userID))
+}
+
+export const getUserCategory = (userID: import("ittai").UserID) => {
+    const pinnedCategories = getAll()
+    for (const categoryName in pinnedCategories) {
+        const category = pinnedCategories[categoryName]
+        if (category.users.some((user) => user === userID)) return categoryName
+    }
 }
 
 export const useListUpdate = () => {
@@ -113,6 +133,7 @@ export const useListUpdate = () => {
 export default {
     getAll,
     getCategories,
+    getCategory,
     getUsers,
     getColor,
     setRaw,
@@ -123,5 +144,7 @@ export default {
     setUserList,
     addUser,
     removeUser,
+    isUserAdded,
+    getUserCategory,
     useListUpdate
 }

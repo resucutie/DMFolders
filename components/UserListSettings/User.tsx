@@ -6,9 +6,12 @@ const { React, React: {
     useEffect,
 } } = webpack
 import { Users } from "ittai/stores"
-import { Avatar, DiscordIcon } from "ittai/components"
+import { Avatar, DiscordIcon, TooltipContainer } from "ittai/components"
 import { Button, Text, Flex } from "ittai/components"
 import classes from "../../utils/classes"
+//@ts-ignore
+import styles from "./User.scss"
+import joinClasses from "../../utils/joinClasses"
 
 interface Props {
     id: UserID,
@@ -30,7 +33,7 @@ export default function({ id, onMove, onRemove, disableUp = false, disableDown =
     return (
         <Flex
             align={Flex.Align.CENTER}
-            className={classes.ServerMembers.member}
+            className={joinClasses(classes.ServerMembers.member, styles.wrapper)}
         >
             <div className={classes.ServerMembers.avatar}>
                 <Avatar
@@ -41,7 +44,7 @@ export default function({ id, onMove, onRemove, disableUp = false, disableDown =
                     size={Avatar.Sizes.SIZE_40}
                 />
             </div>
-            <div className={classes.ServerMembers.nameTag}>
+            <div className={classes.ServerMembers.nameTag} style={{ marginRight: "auto" }}>
                 <div className={classes.ServerMembers.name}>
                     {user?.username}
                 </div>
@@ -53,7 +56,6 @@ export default function({ id, onMove, onRemove, disableUp = false, disableDown =
                 direction={Flex.Direction.VERTICAL}
                 grow={0}
                 shrink={0}
-                style={{ marginLeft: "auto" }}
             >
                 <Button
                     size={Button.Sizes.ICON}
@@ -84,14 +86,16 @@ export default function({ id, onMove, onRemove, disableUp = false, disableDown =
                     <DiscordIcon name="ArrowDropDown" />
                 </Button>
             </Flex>
-            <Button
-                size={Button.Sizes.ICON}
-                color={Button.Colors.RED}
-                onClick={onRemove}
-                look={Button.Looks.LINK}
-            >
-                <DiscordIcon name="Trash" />
-            </Button>
+            <TooltipContainer text="Delete">
+                <Button
+                    size={Button.Sizes.ICON}
+                    color={Button.Colors.RED}
+                    onClick={onRemove}
+                    look={Button.Looks.LINK}
+                >
+                    <DiscordIcon name="Trash" />
+                </Button>
+            </TooltipContainer>
         </Flex>
     )
 }

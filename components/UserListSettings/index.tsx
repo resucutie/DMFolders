@@ -7,25 +7,25 @@ import {
     DiscordIcon,
     ColorPicker,
     Popout,
-    Modal,
-    Text,
-    Heading
+    TooltipContainer
 } from "ittai/components"
-const { useState } = React
 import pinnedDMS, { useListUpdate } from "../../handlers/pinnedDMS"
 import { moveObjectKey, moveArray } from "../../utils/move"
 import { ColorHex, PinnedDMS } from "../../types"
 import User from "./User"
 import classes from "../../utils/classes"
-import ChangeCategoryNameModal from "./ChangeCategoryNameModal"
+import ChangeCategoryNameModal from "./Modals/CategorySettingsModal"
+//@ts-ignore
+import styles from "./index.scss"
+import joinClasses from "../../utils/joinClasses"
+import AddUserModal from "./Modals/AddUserModal"
 
-const { CustomColorButton } = webpack.findByProps("DefaultColorButton")
-// const ColorPicker = webpack.findByDisplayName("ColorPicker")
+const ListSectionItem = webpack.findByDisplayName("ListSectionItem")
 
 export default function () {
-    const [newCategory, setNewCategory] = useState<string>("")
+    const [newCategory, setNewCategory] = React.useState<string>("")
     useListUpdate()
-    console.log(ColorPicker)
+    // console.log(ColorPicker)
 
     return (
         <>
@@ -54,7 +54,7 @@ interface CategoryProps {
     index: number
 }
 export const UserCategory = ({ name, users, index }: CategoryProps) => {
-    const [newUser, setNewUser] = useState<string>("")
+    // const [newUser, setNewUser] = React.useState<string>("")
 
     const handleCategoryPos = (updn: number) => {
         // -1 = move down by one
@@ -69,41 +69,48 @@ export const UserCategory = ({ name, users, index }: CategoryProps) => {
     }
 
     return (
-        <div key={name}>
+        <div key={name} className={styles.category}>
             <Flex align={Flex.Align.CENTER}>
-                <h1
-                    style={{ marginRight: "auto" }}
-                    onClick={() => ModalActions.openModal((props) => <ChangeCategoryNameModal {...props} name={name}/>)}
+                <ListSectionItem
+                    className={joinClasses(classes.PrivateChannelsHeaderContainer.privateChannelsHeaderContainer, styles.exampleListSectionItem)}
                 >
-                    {name}
-                </h1>
+                    <Flex style={{ color: pinnedDMS.getColor(name), fontWeight: "bold" }} align={Flex.Align.CENTER}>
+                        {name}
+                    </Flex>
+                </ListSectionItem>
+
                 <Popout position={Popout.Positions.BOTTOM} renderPopout={(props) => <div {...props}>
-                    <Modal.ModalRoot size={Modal.ModalSize.DYNAMIC} transitionState={1}>
-                        <Modal.ModalHeader separator={false}>
-                            <Heading variant="heading-lg/medium">Change color</Heading>
-                        </Modal.ModalHeader>
-                        <Modal.ModalContent>
-                            <ColorPicker
-                                colors={Constants.ROLE_COLORS}
-                                defaultColor={Constants.DEFAULT_ROLE_COLOR}
-                                value={pinnedDMS.getColor(name) === "default" ? Constants.DEFAULT_ROLE_COLOR : ColorUtils.hex2int(pinnedDMS.getColor(name) as ColorHex)}
-                                onChange={(e: number) => pinnedDMS.setColor(name, ColorUtils.int2hex(e))}
-                            />
-                        </Modal.ModalContent>
-                        <Modal.ModalFooter>
-                            <Button
-                                color={Button.Colors.WHITE}
-                                look={Button.Looks.LINK}
-                                /*@ts-ignore*/
-                                onClick={() => DiscordNative.clipboard.copy(pinnedDMS.getColor(name))}
-                            >Copy color</Button>
-                        </Modal.ModalFooter>
-                    </Modal.ModalRoot>
+                    <ChangeCategoryNameModal transitionState={1} onClose={props.closePopout} name={name} />
                 </div>}>
-                    {(props) => <div {...props} className={classes.ColorPicker.customContainer}>
-                        <CustomColorButton customColor={pinnedDMS.getColor(name) === "default" ? Constants.DEFAULT_ROLE_COLOR : ColorUtils.hex2int(pinnedDMS.getColor(name) as ColorHex)} />
-                    </div>}
+                    {(popout) => <TooltipContainer text="Edit category">
+                        <Button {...popout}
+                            size={Button.Sizes.ICON}
+                            look={Button.Looks.BLANK}
+                            className={joinClasses(classes.AccountControlButtons.button, classes.AccountControlButtons.enabled)}
+                        >
+                            <DiscordIcon name="Pencil" style={{ width: "20px", height: "20px" }} />
+                        </Button>
+                    </TooltipContainer>}
                 </Popout>
+
+                <div style={{marginRight: "auto"}} />
+
+                <Popout position={Popout.Positions.LEFT} renderPopout={(props) => <div {...props}>
+                    <AddUserModal transitionState={1} onClose={props.closePopout} onSelect={(user) => {
+                        if (user.id != null) pinnedDMS.addUser(name, user.id)
+                    }}/>
+                </div>}>
+                    {(popout) => <TooltipContainer text="Add a new person">
+                        <Button {...popout}
+                            size={Button.Sizes.ICON}
+                            look={Button.Looks.BLANK}
+                            className={joinClasses(classes.AccountControlButtons.button, classes.AccountControlButtons.enabled)}
+                        >
+                            <DiscordIcon name="PersonAdd" style={{ width: "20px", height: "20px" }} />
+                        </Button>
+                    </TooltipContainer>}
+                </Popout>
+                
                 <Flex
                     direction={Flex.Direction.VERTICAL}
                     grow={0}
@@ -114,58 +121,52 @@ export const UserCategory = ({ name, users, index }: CategoryProps) => {
                         onClick={() => handleCategoryPos(+1)}
                         disabled={index === 0}
                         look={Button.Looks.BLANK}
-                        className={[
-                            classes.AccountControlButtons.button,
-                            index === 0
-                                ? classes.AccountControlButtons.disabled
-                                : classes.AccountControlButtons.enabled,
-                        ].join(" ")}
+                        className={joinClasses(classes.AccountControlButtons.button, index === 0 ? classes.AccountControlButtons.disabled : classes.AccountControlButtons.enabled)}
                     >
                         <DiscordIcon name="ArrowDropUp" />
                     </Button>
                     <Button
                         size={Button.Sizes.ICON}
                         onClick={() => handleCategoryPos(-1)}
-                        disabled={index === users.length - 1}
+                        disabled={index === pinnedDMS.getCategories().length - 1}
                         look={Button.Looks.BLANK}
-                        className={[
-                            classes.AccountControlButtons.button,
-                            index === users.length - 1
-                                ? classes.AccountControlButtons.disabled
-                                : classes.AccountControlButtons.enabled,
-                        ].join(" ")}
+                        className={joinClasses(classes.AccountControlButtons.button, index === pinnedDMS.getCategories().length - 1 ? classes.AccountControlButtons.disabled : classes.AccountControlButtons.enabled)}
                     >
                         <DiscordIcon name="ArrowDropDown" />
                     </Button>
                 </Flex>
-                <Button
-                    size={Button.Sizes.ICON}
-                    color={Button.Colors.RED}
-                    onClick={() => pinnedDMS.removeCategory(name)}
-                    look={Button.Looks.LINK}
-                >
-                    <DiscordIcon name="Trash" />
-                </Button>
+                <TooltipContainer text="Delete">
+                    <Button
+                        size={Button.Sizes.ICON}
+                        color={Button.Colors.RED}
+                        onClick={() => pinnedDMS.removeCategory(name)}
+                        look={Button.Looks.LINK}
+                    >
+                        <DiscordIcon name="Trash" />
+                    </Button>
+                </TooltipContainer>
             </Flex>
-            {users.map((id, index) => (
-                <User
-                    id={id}
-                    onMove={(updn) =>
-                        pinnedDMS.setUserList(
-                            name,
-                            moveArray(
-                                users,
-                                index,
-                                index - (updn === "up" ? +1 : -1)
+            <div className={joinClasses(styles.userList, classes.Scrolling.scrollerBase, classes.Scrolling.thin, classes.Scrolling.fade)}>
+                {users.map((id, index) => (
+                    <User
+                        id={id}
+                        onMove={(updn) =>
+                            pinnedDMS.setUserList(
+                                name,
+                                moveArray(
+                                    users,
+                                    index,
+                                    index - (updn === "up" ? +1 : -1)
+                                )
                             )
-                        )
-                    }
-                    onRemove={() => pinnedDMS.removeUser(name, id)}
-                    disableUp={index === 0}
-                    disableDown={index === users.length - 1}
-                />
-            ))}
-            <Flex>
+                        }
+                        onRemove={() => pinnedDMS.removeUser(name, id)}
+                        disableUp={index === 0}
+                        disableDown={index === users.length - 1}
+                    />
+                ))}
+            </div>
+            {/* <Flex>
                 <TextInput
                     value={newUser}
                     onChange={(e) => setNewUser(e)}
@@ -174,7 +175,7 @@ export const UserCategory = ({ name, users, index }: CategoryProps) => {
                 <Button onClick={() => pinnedDMS.addUser(name, newUser)}>
                     Add
                 </Button>
-            </Flex>
+            </Flex> */}
         </div>
     )
 }

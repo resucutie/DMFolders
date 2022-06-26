@@ -1,0 +1,26 @@
+.pinButton {
+    margin: 2px;
+    display: none;
+    opacity: .6;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    &.lonely {
+        padding-right: 8px;
+    }
+
+    svg {
+        min-width: 16px;
+        width: 16px !important;
+        min-height: 16px;
+        height: 16px !important;
+    }
+}
+
+.pinHoverHandler:hover{
+    .pinButton {
+        display: block;
+    }
+}

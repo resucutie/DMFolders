@@ -1,14 +1,24 @@
 import { searchClassNameModules } from "ittai/utilities"
 import { findByProps } from "ittai/webpack"
 
-export const PrivateChannelsHeaderContainer = findByProps(
-    "privateChannelRecipientsInviteButtonIcon"
-) as {
+export const PrivateChannelsHeaderContainer = findByProps("privateChannelRecipientsInviteButtonIcon") as {
     empty: string
     headerText: string
     privateChannelRecipientsInviteButtonIcon: string
     privateChannelsHeaderContainer: string
     scroller: string
+}
+
+export const Scrolling = findByProps("scrolling", "scrollerBase") as {
+    scrollerBase: string
+    thin: string
+    fade: string
+    scrolling: string
+    auto: string
+    none: string
+    content: string
+    disableScrollAnchor: string
+    managedReactiveScroller: string
 }
 
 export const ServerMembers = findByProps("ui-scroller-wrap") as {
@@ -59,11 +69,34 @@ export const ColorPicker = findByProps("custom", "customColorPickerInput", "colo
     colorPickerDropperFg: string
 }
 
+export const Margins = findByProps("marginLarge", "marginTop20") as {
+    marginXSmall: string
+    marginSmall: string
+    marginMedium: string
+    marginLarge: string
+    marginXLarge: string
+    marginReset: string
+    marginTop4: string
+    marginBottom4: string
+    marginTop8: string
+    marginBottom8: string
+    marginTop20: string
+    marginBottom20: string
+    marginTop40: string
+    marginBottom40: string
+    marginTop60: string
+    marginBottom60: string
+    marginCenterHorz: string
+    marginLeft8: string
+}
+
 export default {
     PrivateChannelsHeaderContainer,
     ServerMembers,
     AccountControlButtons,
-    ColorPicker
+    ColorPicker,
+    Margins,
+    Scrolling
 }
 
 /* copy types
