@@ -2,9 +2,9 @@
     "name": "DMFolders",
     "version": "0.1.0",
     "license": "MIT",
-    "source": "https://example.com/gitRepo",
+    "source": "https://github.com/abUwUser/DMFolders.git",
     "updateUrl": "https://example.com/gitRepo",
     "main": "index.tsx",
     "author": "A user",
-    "description": "Rewrite of the plugin \"Timezones\" using the Temporal API"
+    "description": "Organize your DMs with folders"
 }
