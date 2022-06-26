@@ -1,0 +1,33 @@
+name: Build Plugin
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: ./src
+      - name: Build
+        uses: docker://registry.catvibers.me/ittai/builder
+        with:
+          entrypoint: sh
+          args: -c "cd src && pnpm i && ittai --plugin="./" --betterdiscord --powercordv2 --goosemod --production --output=../ && rm -rf ./node_modules ./.swc"
+          # rm is a hack to make github actions permissions function
+      - name: Prepare to push
+        # TODO remove RUNNER_TEMP hack
+        run: |
+          cp ./src/README* . || true
+          cp ./src/LICENSE* . || true
+          rm -rf ./src
+          git init
+          git config --local user.email "ittai@catvibers.me"
+          git config --local user.name "ittaibot"
+          git add ./*
+          git commit -m "Build plugin" -a          
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release
+          force: true
