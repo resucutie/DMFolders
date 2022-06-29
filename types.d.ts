@@ -5,7 +5,7 @@ export interface PinnedDMS {
 }
 
 export interface Category {
-    color ?: ColorHex | "default"
+    color ?: ColorHex
     users: Array<import("ittai").UserID>
 }
 

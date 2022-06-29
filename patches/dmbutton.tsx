@@ -4,7 +4,7 @@ const { React } = webpack
 import { Channels, CurrentChannels } from "ittai/stores"
 import { findInReactTree, searchClassNameModules } from "ittai/utilities"
 import { DiscordIcon, ContextMenu } from "ittai/components"
-
+import * as settings from "ittai/settings"
 import pinnedDMS, { useListUpdate } from "../handlers/pinnedDMS"
 import { UserObject } from "ittai";
 
@@ -37,19 +37,22 @@ export default function () {
                     delete Interactive.props.children[closeIndex]
                 }
 
-                Interactive.props.children.splice(1, 0, <div className={joinClasses(styles.pinButton, isAdded ? styles.lonely : "")}
-                    onClick={(e) => {
-                        // console.log(ContextMenu)
-                        if (isAdded) {
-                            pinnedDMS.removeUser(pinnedDMS.getUserCategory(user.id)!, user.id)
-                        } else {
-                            //@ts-ignore
-                            webpack.ContextMenu.openContextMenu(e, () => <AddUser userId={user.id}/>)
-                        }
-                    }}
-                >
-                    {!isAdded ? <DiscordIcon name="PinLayer" /> : <DiscordIcon name="UnpinLayer" />}
-                </div>)
+                if (settings.get("pinIcon", true)) {    
+                    Interactive.props.children.splice(1, 0, <div className={joinClasses(styles.pinButton, isAdded ? styles.lonely : "")}
+                        onClick={(e) => {
+                            // console.log(ContextMenu)
+                            if (isAdded) {
+                                pinnedDMS.removeUser(pinnedDMS.getUserCategory(user.id)!, user.id)
+                            } else {
+                                //@ts-ignore
+                                webpack.ContextMenu.openContextMenu(e, () => <AddUser userId={user.id}/>)
+                            }
+                        }}
+                    >
+                        {!isAdded ? <DiscordIcon name="PinLayer" /> : <DiscordIcon name="UnpinLayer" />}
+                    </div>)
+                }
+
             }
 
 

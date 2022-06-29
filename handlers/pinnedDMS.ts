@@ -1,5 +1,5 @@
 import * as settings from "ittai/settings"
-import { Dispatcher, React } from "ittai/webpack"
+import { Constants, Dispatcher, React, ColorUtils } from "ittai/webpack"
 import type { Category, ColorHex, PinnedDMS } from "../types"
 
 export const getAll = (): PinnedDMS => {
@@ -26,7 +26,7 @@ export const getColor = (category: string) => {
     let pinnedCategories = getAll()
 
     if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
-    return pinnedCategories[category].color as ColorHex | "default"
+    return pinnedCategories[category].color as ColorHex
 }
 
 export const setRaw = (setting: PinnedDMS) => {
@@ -36,7 +36,7 @@ export const setRaw = (setting: PinnedDMS) => {
 }
 
 export const addCategory = (category: string, settings: Category = {
-    color: "default",
+    color: ColorUtils.int2hex(Constants.DEFAULT_ROLE_COLOR),
     users: []
 }) => {
     let pinnedCategories = getAll()
@@ -65,7 +65,7 @@ export const removeCategory = (category: string) => {
     setRaw(pinnedCategories)
 }
 
-export const setColor = (category: string, color: ColorHex | "default") => {
+export const setColor = (category: string, color: ColorHex) => {
     let pinnedCategories = getAll()
         
     if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)

@@ -1,5 +1,5 @@
-# TemporalTimezones
-Rewrite of the plugin "Timezones" using the Temporal API
+# DMFolders
+Organize your DMs with folders
 
 ## Installing
 1. Install a mod. I recommend to download [BetterDiscord](https://betterdiscord.app/), but you can compile for [Powercord](http://powercord.dev/) and [GooseMod](https://goosemod.com/)

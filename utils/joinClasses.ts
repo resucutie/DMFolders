@@ -1,1 +1,1 @@
-export default (...classes: string[]) => classes.join(" ")
+export default (...classes: (string | any)[]) => classes.filter(s => typeof s === 'string').join(" ")

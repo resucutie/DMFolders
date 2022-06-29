@@ -9,6 +9,52 @@ export const PrivateChannelsHeaderContainer = findByProps("privateChannelRecipie
     scroller: string
 }
 
+export const DMButtons = findByProps("channel", "linkButtonIcon") as {
+    channel: string
+    fullWidth: string
+    interactive: string
+    interactiveSelected: string
+    avatarWithText: string
+    link: string
+    linkButton: string
+    linkButtonIcon: string
+    closeButton: string
+    closeIcon: string
+    subtext: string
+    activity: string
+    activityText: string
+    activityEmoji: string
+    decorator: string
+}
+
+export const Interactives = findByProps("interactive", "muted") as {
+    responsiveWidthMobileFirst: string
+    interactive: string
+    muted: string
+    selected: string
+}
+
+export const container: string = (searchClassNameModules("container-32HW5s") as any).container
+
+export const DeleteAccountButtonRow = findByProps("buttonContainer", "description", "disableButton") as {
+    description: string
+    buttonContainer: string
+    disableButton: string
+}
+
+export const Names = findByProps("nameAndDecorators") as {
+    muted: string
+    avatar: string
+    highlighted: string
+    layout: string
+    content: string
+    name: string
+    wrappedLayout: string
+    wrappedName: string
+    nameAndDecorators: string
+    subText: string
+}
+
 export const Scrolling = findByProps("scrolling", "scrollerBase") as {
     scrollerBase: string
     thin: string
@@ -92,11 +138,16 @@ export const Margins = findByProps("marginLarge", "marginTop20") as {
 
 export default {
     PrivateChannelsHeaderContainer,
+    DMButtons,
     ServerMembers,
     AccountControlButtons,
     ColorPicker,
     Margins,
-    Scrolling
+    Scrolling,
+    DeleteAccountButtonRow,
+    Names,
+    Interactives,
+    container
 }
 
 /* copy types

@@ -9,7 +9,7 @@ const { CustomColorButton } = webpack.findByProps("DefaultColorButton")
 
 export default function (modalProps: { transitionState: 1 | 2 | 3, onClose: () => void, name: string}) {
     const [newName, setNewName] = React.useState(modalProps.name)
-    const [newColor, setNewColor] = React.useState<ColorHex | "default">(pinnedDMS.getColor(modalProps.name))
+    const [newColor, setNewColor] = React.useState<ColorHex>(pinnedDMS.getColor(modalProps.name))
 
     return <Modal.ModalRoot size={Modal.ModalSize.DYNAMIC} {...modalProps}>
         <Modal.ModalHeader separator={false}>
@@ -26,8 +26,8 @@ export default function (modalProps: { transitionState: 1 | 2 | 3, onClose: () =
                 <ColorPicker
                     colors={Constants.ROLE_COLORS}
                     defaultColor={Constants.DEFAULT_ROLE_COLOR}
-                    value={newColor === "default" ? Constants.DEFAULT_ROLE_COLOR : ColorUtils.hex2int(newColor as ColorHex)}
-                    onChange={(c: number) => setNewColor(c === Constants.DEFAULT_ROLE_COLOR ? "default" : ColorUtils.int2hex(c))}
+                    value={ColorUtils.hex2int(newColor)}
+                    onChange={(c: number) => setNewColor(ColorUtils.int2hex(c))}
                 />
             </Forms.FormItem>
         </Modal.ModalContent>

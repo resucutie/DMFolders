@@ -1,0 +1,18 @@
+.minimalisticPopout {
+    padding: 16px;
+    padding-left: 8px;
+    background: var(--background-tertiary);
+    min-width: 224px
+}
+
+.wrapper {
+    margin: 4px 0;
+    margin-left: 8px;
+    padding: 4px 0;
+    border-top: 1px solid var(--background-modifier-accent);
+    border-bottom: 1px solid var(--background-modifier-accent);
+
+    & > * {
+        margin-left: 0;
+    }
+}
