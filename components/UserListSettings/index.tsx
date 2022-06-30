@@ -55,7 +55,7 @@ interface CategoryProps {
     index: number
 }
 export const UserCategory = ({ name, users, index }: CategoryProps) => {
-    const [hide, setHide] = React.useState<boolean>(false)
+    const [hide, setHide] = React.useState<boolean>(true)
 
     return (
         <div key={name} className={styles.category}>

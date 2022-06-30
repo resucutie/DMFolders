@@ -1,7 +1,7 @@
 import * as patcher from "ittai/patcher"
 import * as webpack from "ittai/webpack"
 import { React, Dispatcher } from "ittai/webpack"
-import { Channels, CurrentChannels } from "ittai/stores"
+import { Channels, CurrentChannels, Users } from "ittai/stores"
 import { findInReactTree, searchClassNameModules } from "ittai/utilities"
 import { Flex, Modal, Popout } from "ittai/components"
 import * as settings from "ittai/settings"
@@ -16,6 +16,9 @@ const ListSectionItem = webpack.findByDisplayName("ListSectionItem")
 const { DirectMessage } = webpack.findByProps("DirectMessage")
 const { NumberBadge } = webpack.findByProps("NumberBadge")
 const { getMentionCount } = webpack.findByProps("getMentionCount")
+const UserSummaryItem = webpack.findByDisplayName("UserSummaryItem")
+
+const USER_ICON_SIZE = 16
 
 export default function() {
     let PinDMSRender = () => <CurrentLists />
@@ -112,13 +115,15 @@ export const CategoryList = ({category}: {category: string}) => {
 export const MinimalistList = ({ category }: { category: string }) => {
     const currentUsers = pinnedDMS.getUsers(category)
     const hasSomebody = currentUsers.some((userId) => CurrentChannels.getChannelId() === Channels.getDMFromUserId(userId))
-    const [pingCount, setPingCount] = React.useState<number>(() => currentUsers.map(userId => Channels.getDMFromUserId(userId)).reduce((acc, channelId) => acc + getMentionCount(channelId), 0))
+    const [pingCount, setPingCount] = React.useState<number>(() => {
+        return currentUsers.map(userId => Channels.getDMFromUserId(userId)).reduce((acc, channelId) => acc + getMentionCount(channelId), 0)
+    })
 
     React.useEffect(() => {
         const listener = ({channelId}: any) => {
-            if (currentUsers.some((userId) => channelId === Channels.getDMFromUserId(userId))){
-                setPingCount(currentUsers.map(userId => Channels.getDMFromUserId(userId)).reduce((acc, channelId) => acc + getMentionCount(channelId), 0))
-            }
+            if (currentUsers.some((userId) => channelId === Channels.getDMFromUserId(userId))) setPingCount(
+                currentUsers.map(userId => Channels.getDMFromUserId(userId)).reduce((acc, channelId) => acc + getMentionCount(channelId), 0)
+            )
         };
 
         Dispatcher.subscribe("MESSAGE_CREATE", listener as any);
@@ -156,12 +161,18 @@ export const MinimalistList = ({ category }: { category: string }) => {
                         hasSomebody ? joinClasses(classes.DMButtons.interactiveSelected, classes.Interactives.selected) : undefined,
                         classes.DMButtons.linkButton
                     )}>
-                    <Flex className={classes.Names.layout}>
-                        <span style={{ color: pinnedDMS.getColor(category), fontWeight: "bold", marginRight: "auto" }}>
-                            {category}
-                        </span>
+                    <div className={joinClasses(classes.Names.layout, styles.minimalisticView)}>
+                        <Flex direction={Flex.Direction.VERTICAL} className={styles.nameAndUsers}>
+                            <span style={{ color: pinnedDMS.getColor(category), fontWeight: "bold" }}>
+                                {category}
+                            </span>
+                            {settings.get("minimal.userIcons", false) && <UserSummaryItem
+                                size={USER_ICON_SIZE}
+                                users={pinnedDMS.getUsers(category).map(userId => Users.getUser(userId))}
+                            />}
+                        </Flex>
                         {Boolean(pingCount) && <NumberBadge count={pingCount} />}
-                    </Flex>
+                    </div>
                 </div>
             </div>}
         </Popout>

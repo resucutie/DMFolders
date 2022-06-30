@@ -16,3 +16,15 @@
         margin-left: 0;
     }
 }
+
+.minimalisticView {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    display: flex;
+    width: 100%;
+
+    .nameAndUsers {
+        gap: 4px;
+        flex-grow: 2 !important;
+    }
+}
