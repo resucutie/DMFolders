@@ -6,6 +6,8 @@ import * as toast from "ittai/toast"
 //@ts-ignore
 import styles from "./Settings.scss"
 import isValidJSON from "../utils/isValidJSON"
+import classes from "../utils/classes"
+import joinClasses from "../utils/joinClasses"
 
 export default function() {
     const [, forceUpdate] = React.useReducer((v) => !v, false)
@@ -16,46 +18,50 @@ export default function() {
         </Category>
 
         <Category title="Other settings" description="Other settings that you can tweak">
-            <SwitchItem 
-                value={settings.get("pinIcon", true)}
-                onChange={(e) => settings.set("pinIcon", e)}
-            >Show pin icon</SwitchItem>
-            <Forms.FormItem>
-                <Forms.FormTitle>Display mode</Forms.FormTitle>
-                <RadioGroup
-                    options={[
-                        { name: "Category", value: "category" },
-                        { name: "Minimalist", value: "minimal" }
-                    ]}
-                    value={settings.get("display", "category")}
-                    onChange={(v) => {
-                        settings.set("display", v.value)
-                        Dispatcher.dirtyDispatch({ type: "PINDMS_CHANGE_LIST" })
-                        forceUpdate()
-                    }}
-                />
-            </Forms.FormItem>
-
-            {settings.get("display", "category") === "minimal" && <Forms.FormItem>
-                <Forms.FormTitle>Minimalist view settings</Forms.FormTitle>
+            <Forms.FormSection>
                 <SwitchItem
-                    value={settings.get("minimal.userIcons", false)}
-                    onChange={(e) => {
-                        settings.set("minimal.userIcons", e)
-                        Dispatcher.dirtyDispatch({ type: "PINDMS_CHANGE_LIST" })
-                    }}
-                >Show user icons</SwitchItem>
-            </Forms.FormItem>}
-            <Forms.FormItem>
-                <Forms.FormTitle>Export and import settings</Forms.FormTitle>
-                <Flex className={styles.buttonFlex}>
-                    <Button onClick={handleExport}>Export</Button>
-                    <Button color={Button.Colors.RED}
-                        onClick={handleImport}
-                    >Import</Button>
-                </Flex>
-            </Forms.FormItem>
+                    value={settings.get("pinIcon", true)}
+                    onChange={(e) => settings.set("pinIcon", e)}
+                >Show pin icon</SwitchItem>
 
+                <Forms.FormItem>
+                    <Forms.FormTitle>Display mode</Forms.FormTitle>
+                    <RadioGroup
+                        options={[
+                            { name: "Category", value: "category" },
+                            { name: "Minimalist", value: "minimal" }
+                        ]}
+                        value={settings.get("display", "category")}
+                        onChange={(v) => {
+                            settings.set("display", v.value)
+                            Dispatcher.dirtyDispatch({ type: "PINDMS_CHANGE_LIST" })
+                            forceUpdate()
+                        }}
+                    />
+                    <Forms.FormDivider className={joinClasses(classes.Margins.marginBottom20, classes.Margins.marginTop20)} />
+                </Forms.FormItem>
+
+
+                {settings.get("display", "category") === "minimal" && <Forms.FormItem>
+                    <Forms.FormTitle>Minimalist view settings</Forms.FormTitle>
+                    <SwitchItem
+                        value={settings.get("minimal.userIcons", false)}
+                        onChange={(e) => {
+                            settings.set("minimal.userIcons", e)
+                            Dispatcher.dirtyDispatch({ type: "PINDMS_CHANGE_LIST" })
+                        }}
+                    >Show user icons</SwitchItem>
+                </Forms.FormItem>}
+                <Forms.FormItem>
+                    <Forms.FormTitle>Export and import settings</Forms.FormTitle>
+                    <Flex className={styles.buttonFlex}>
+                        <Button onClick={handleExport}>Export</Button>
+                        <Button color={Button.Colors.RED}
+                            onClick={handleImport}
+                        >Import</Button>
+                    </Flex>
+                </Forms.FormItem>
+            </Forms.FormSection>
         </Category>
     </>
 }
