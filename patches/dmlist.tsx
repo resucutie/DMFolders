@@ -112,18 +112,19 @@ export const CategoryList = ({category}: {category: string}) => {
     </>
 }
 
+const getPingCount = (currentUsers: string[]) => currentUsers.map(userId => Channels.getDMFromUserId(userId)).reduce((acc, channelId) => acc + getMentionCount(channelId), 0)
+
 export const MinimalistList = ({ category }: { category: string }) => {
-    const currentUsers = pinnedDMS.getUsers(category)
-    const hasSomebody = currentUsers.some((userId) => CurrentChannels.getChannelId() === Channels.getDMFromUserId(userId))
-    const [pingCount, setPingCount] = React.useState<number>(() => {
-        return currentUsers.map(userId => Channels.getDMFromUserId(userId)).reduce((acc, channelId) => acc + getMentionCount(channelId), 0)
-    })
+    const currentUsers = React.useMemo(() => pinnedDMS.getUsers(category), [])
+    const isCurrentChannel = React.useMemo(() => {
+        return currentUsers.some((userId) => CurrentChannels.getChannelId() === Channels.getDMFromUserId(userId))
+    }, [])
+
+    const [pingCount, setPingCount] = React.useState<number>(getPingCount(currentUsers))
 
     React.useEffect(() => {
         const listener = ({channelId}: any) => {
-            if (currentUsers.some((userId) => channelId === Channels.getDMFromUserId(userId))) setPingCount(
-                currentUsers.map(userId => Channels.getDMFromUserId(userId)).reduce((acc, channelId) => acc + getMentionCount(channelId), 0)
-            )
+            if (currentUsers.some((userId) => channelId === Channels.getDMFromUserId(userId))) setPingCount(getPingCount(currentUsers))
         };
 
         Dispatcher.subscribe("MESSAGE_CREATE", listener as any);
@@ -158,7 +159,7 @@ export const MinimalistList = ({ category }: { category: string }) => {
                 <div className={joinClasses(
                         classes.DMButtons.interactive,
                         classes.Interactives.interactive,
-                        hasSomebody ? joinClasses(classes.DMButtons.interactiveSelected, classes.Interactives.selected) : undefined,
+                        isCurrentChannel ? joinClasses(classes.DMButtons.interactiveSelected, classes.Interactives.selected) : undefined,
                         classes.DMButtons.linkButton
                     )}>
                     <div className={joinClasses(classes.Names.layout, styles.minimalisticView)}>
