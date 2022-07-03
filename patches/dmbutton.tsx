@@ -7,6 +7,7 @@ import { DiscordIcon, ContextMenu } from "ittai/components"
 import * as settings from "ittai/settings"
 import pinnedDMS, { useListUpdate } from "../handlers/pinnedDMS"
 import { UserObject } from "ittai";
+import * as constants from "../constants"
 
 //@ts-ignore
 import styles from "./dmbutton.scss"
@@ -37,7 +38,7 @@ export default function () {
                     delete Interactive.props.children[closeIndex]
                 }
 
-                if (settings.get("pinIcon", true)) {    
+                if (settings.get("pinIcon", constants.Settings.DefaultSettings.PIN_ICON)) {    
                     Interactive.props.children.splice(1, 0, <div className={joinClasses(styles.pinButton, isAdded ? styles.lonely : "")}
                         onClick={(e) => {
                             // console.log(ContextMenu)

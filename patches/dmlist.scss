@@ -1,8 +1,17 @@
-.minimalisticPopout {
-    padding: 16px;
-    padding-left: 8px;
-    background: var(--background-tertiary);
-    min-width: 224px
+.categoryViewWrapper {
+    opacity: .7;
+    
+    &:hover {
+        opacity: 1;
+
+        .icon, .name {
+            color: unset
+        }
+    }
+
+    &:not(.open) .icon {
+        transform: rotate(-90deg);
+    }
 }
 
 .wrapper {
@@ -17,6 +26,13 @@
     }
 }
 
+.minimalisticPopout {
+    padding: 16px;
+    padding-left: 8px;
+    background: var(--background-tertiary);
+    min-width: 224px
+}
+
 .minimalisticView {
     padding-top: 4px;
     padding-bottom: 4px;
@@ -26,5 +42,9 @@
     .nameAndUsers {
         gap: 4px;
         flex-grow: 2 !important;
+
+        span {
+            opacity: .7;
+        }
     }
 }

@@ -115,7 +115,7 @@ const CategoryHeader = ({ name, index, hidden = false, onHide }: HeaderProps) =>
         </ListSectionItem>
 
         <Popout position={Popout.Positions.BOTTOM} renderPopout={(props) => <div {...props}>
-            <ChangeCategoryNameModal transitionState={1} onClose={props.closePopout} name={name} />
+            <ChangeCategoryNameModal transitionState={1} onClose={props.closePopout} category={name} />
         </div>}>
             {(popout) => <TooltipContainer text="Edit category">
                 <Button {...popout}

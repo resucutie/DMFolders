@@ -27,14 +27,36 @@ export const DMButtons = findByProps("channel", "linkButtonIcon") as {
     decorator: string
 }
 
+export const Category = findByProps("addButtonIcon", "containerDragAfter") as {
+    spaceBeforeCategory: string
+    containerDefault: string
+    containerDragAfter: string
+    containerDragBefore: string
+    containerUserOver: string
+    disableClick: string
+    addButton: string
+    forceVisible: string
+    iconVisibility: string
+    addButtonIcon: string
+    wrapper: string
+    clickable: string
+    children: string
+    mainContent: string
+    icon: string
+    collapsed: string
+    muted: string
+    name: string
+    dismissWrapper: string
+    dismissButton: string
+    dismiss: string
+}
+
 export const Interactives = findByProps("interactive", "muted") as {
     responsiveWidthMobileFirst: string
     interactive: string
     muted: string
     selected: string
 }
-
-export const container: string = (searchClassNameModules("container-32HW5s") as any).container
 
 export const DeleteAccountButtonRow = findByProps("buttonContainer", "description", "disableButton") as {
     description: string
@@ -147,7 +169,7 @@ export default {
     DeleteAccountButtonRow,
     Names,
     Interactives,
-    container
+    Category
 }
 
 /* copy types

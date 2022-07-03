@@ -2,17 +2,18 @@
 
 import { Plugin } from "ittai/entities"
 import * as patcher from "ittai/patcher"
-import { findInReactTree, searchClassNameModules } from "ittai/utilities"
+//@ts-ignore internal usage only
+import { findInReactTree, searchClassNameModules, multiBenchmark } from "ittai/utilities"
 import * as webpack from "ittai/webpack"
-const { React } = webpack
+import { React, Dispatcher } from "ittai/webpack"
 
 import Settings from "./components/Settings"
 import patchDmList from "./patches/dmlist"
 import patchDmButton from "./patches/dmbutton"
+import pinnedDMS from "./handlers/pinnedDMS"
+import * as constants from "./constants"
 
-const Uh = () => {
-    return <div>boo</div>
-}
+let visibilityStorage: {[category: string]: boolean} = {}
 
 export default class DMFolders extends Plugin {
     start() {
@@ -20,42 +21,30 @@ export default class DMFolders extends Plugin {
         
         //@ts-ignore internal usage only
         globalThis.searchClassNameModules = searchClassNameModules
+        //@ts-ignore internal usage only
+        globalThis.multiBenchmark = multiBenchmark
         
         patchDmList()
         patchDmButton()
 
-        // patcher.after(
-        //     "DMPatch",
-        //     webpack.find(
-        //         (m) =>
-        //             m?.default?.displayName === "ConnectedPrivateChannelsList"
-        //     ),
-        //     "default",
-        //     ([props], res, _this) => {
-        //         console.log({ props, res, _this })
+        Dispatcher.subscribe("STREAMER_MODE_UPDATE", this.onStreamerModeChange)
+    }
 
-        //         let PrivateChannelsList: {
-        //             props: {
-        //                 children: React.ReactNode[]
-        //                 privateChannelIds: string[]
-        //             }
-        //         } = findInReactTree(
-        //             res,
-        //             (m: { type: { displayName: string } }) =>
-        //                 m?.type?.displayName === "PrivateChannelsList"
-        //         ) as any
-        //         if (PrivateChannelsList == null) return
-
-        //         PrivateChannelsList.props.children.push(
-        //             ["", "", "","","","","","","","","","",].map(() => <Uh />)
-        //         )
-
-        //         console.log(PrivateChannelsList)
-        //     }
-        // )
+    private onStreamerModeChange({value}: {value: boolean}) {
+        if (this.settings.get("streamerMode", constants.Settings.DefaultSettings.STREAMER_MODE))
+        pinnedDMS.getCategories().forEach(category => {
+            if (value) {
+                visibilityStorage[category] = pinnedDMS.getVisibility(category)
+                pinnedDMS.setVisibility(category, false)
+            } else {
+                pinnedDMS.setVisibility(category, visibilityStorage[category] ?? false)
+            }
+        })
+        Dispatcher.dirtyDispatch({ type: constants.DISPATCHER_PINDMS_CHANGE_LIST })
     }
 
     stop() {
         patcher.unpatchAll()
+        Dispatcher.unsubscribe("STREAMER_MODE_UPDATE", this.onStreamerModeChange)
     }
 }

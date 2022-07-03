@@ -15,29 +15,16 @@ export const getCategory = (category: string): Category => {
     return getAll()[category]
 }
 
-export const getUsers = (category: string) => {
-    const pinnedCategories = getAll()
-    if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
-
-    return pinnedCategories[category].users
-}
-
-export const getColor = (category: string) => {
-    let pinnedCategories = getAll()
-
-    if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
-    return pinnedCategories[category].color as ColorHex
-}
-
 export const setRaw = (setting: PinnedDMS) => {
     settings.set("pinnedCategories", setting)
-
+    
     Dispatcher.dirtyDispatch({ type: "PINDMS_CHANGE_LIST" })
 }
 
 export const addCategory = (category: string, settings: Category = {
     color: ColorUtils.int2hex(Constants.DEFAULT_ROLE_COLOR),
-    users: []
+    users: [],
+    show: true
 }) => {
     let pinnedCategories = getAll()
     pinnedCategories[category] = settings
@@ -45,25 +32,6 @@ export const addCategory = (category: string, settings: Category = {
     setRaw(pinnedCategories)
 }
 
-export const renameCategory = (oldCategoryName: string, newCategoryName: string) => {
-    let pinnedCategories = getAll()
-    // console.log(pinnedCategories)
-    Object.defineProperty(pinnedCategories, newCategoryName, Object.getOwnPropertyDescriptor(pinnedCategories, oldCategoryName)!);
-    // console.log(pinnedCategories)
-    delete pinnedCategories[oldCategoryName];
-    // console.log(pinnedCategories)
-
-    setRaw(pinnedCategories)
-}
-
-
-export const removeCategory = (category: string) => {
-    let pinnedCategories = getAll()
-    if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
-    delete pinnedCategories[category]
-    
-    setRaw(pinnedCategories)
-}
 
 export const setColor = (category: string, color: ColorHex) => {
     let pinnedCategories = getAll()
@@ -74,17 +42,66 @@ export const setColor = (category: string, color: ColorHex) => {
     setRaw(pinnedCategories)
 }
 
-export const setUserList = (category: string, userList: string[]) => {
+export const getColor = (category: string) => {
     let pinnedCategories = getAll()
 
-    pinnedCategories[category].users = userList
+    if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
+    return pinnedCategories[category].color as ColorHex
+}
 
+export const setVisibility = (category: string, visibility: boolean) => {
+    let pinnedCategories = getAll()
+    
+    if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
+    pinnedCategories[category].show = visibility
+    
+    setRaw(pinnedCategories)
+}
+
+export const getVisibility = (category: string) => {
+    let pinnedCategories = getAll()
+
+    if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
+    return pinnedCategories[category].show ?? true
+}
+
+export const renameCategory = (oldCategoryName: string, newCategoryName: string) => {
+    let pinnedCategories = getAll()
+    // console.log(pinnedCategories)
+    Object.defineProperty(pinnedCategories, newCategoryName, Object.getOwnPropertyDescriptor(pinnedCategories, oldCategoryName)!);
+    // console.log(pinnedCategories)
+    delete pinnedCategories[oldCategoryName];
+    // console.log(pinnedCategories)
+    
+    setRaw(pinnedCategories)
+}
+
+export const removeCategory = (category: string) => {
+    let pinnedCategories = getAll()
+    if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
+    delete pinnedCategories[category]
+    
+    setRaw(pinnedCategories)
+}
+
+export const getUsers = (category: string) => {
+    const pinnedCategories = getAll()
+    if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
+
+    return pinnedCategories[category].users
+}
+
+export const setUserList = (category: string, userList: string[]) => {
+    let pinnedCategories = getAll()
+    
+    pinnedCategories[category].users = userList
+    
     setRaw(pinnedCategories)
 }
 
 export const addUser = (category: string, userID: import("ittai").UserID) => {
     if (typeof userID !== "string") throw new Error(`Invalid User ID`)
-
+    
     let pinnedCategories = getAll()
     if (pinnedCategories[category] == null) throw new Error(`Category ${category} does not exist`)
 
@@ -134,15 +151,17 @@ export default {
     getAll,
     getCategories,
     getCategory,
-    getUsers,
-    getColor,
     setRaw,
     addCategory,
     renameCategory,
     removeCategory,
+    getColor,
     setColor,
+    getVisibility,
+    setVisibility,
     setUserList,
     addUser,
+    getUsers,
     removeUser,
     isUserAdded,
     getUserCategory,
