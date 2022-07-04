@@ -3,6 +3,8 @@ import { ColorHex, ColorUtils, Constants, Dispatcher, React } from "ittai/webpac
 import { Button, Modal, TextInput, Forms, ColorPicker, SwitchItem } from "ittai/components";
 import pinnedDMS from "../../../handlers/pinnedDMS";
 import classes from "../../../utils/classes"
+import * as constants from "../../../constants"
+import * as settings from "ittai/settings"
 //@ts-ignore
 import styles from "./CategorySettingsModal.scss"
 const { CustomColorButton } = webpack.findByProps("DefaultColorButton")
@@ -34,6 +36,7 @@ export default function (modalProps: { transitionState: 1 | 2 | 3, onClose: () =
                 <SwitchItem
                     value={!pinnedDMS.getVisibility(modalProps.category)}
                     onChange={(e) => pinnedDMS.setVisibility(modalProps.category, !e)}
+                    disabled={settings.get('display', constants.Settings.DefaultSettings.DISPLAY_MODE) === constants.Settings.DefaultSettings.MinimalistView.settingsValue}
                 >Hide its contents</SwitchItem>
             </Forms.FormItem>
         </Modal.ModalContent>

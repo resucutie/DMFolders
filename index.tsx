@@ -6,6 +6,7 @@ import * as patcher from "ittai/patcher"
 import { findInReactTree, searchClassNameModules, multiBenchmark } from "ittai/utilities"
 import * as webpack from "ittai/webpack"
 import { React, Dispatcher } from "ittai/webpack"
+//@ts-ignore internal usage only
 
 import Settings from "./components/Settings"
 import patchDmList from "./patches/dmlist"
@@ -21,8 +22,6 @@ export default class DMFolders extends Plugin {
         
         //@ts-ignore internal usage only
         globalThis.searchClassNameModules = searchClassNameModules
-        //@ts-ignore internal usage only
-        globalThis.multiBenchmark = multiBenchmark
         
         patchDmList()
         patchDmButton()
