@@ -5,7 +5,7 @@
                 {
                     "name": "build",
                     "commands": [
-                        "pnpm run watch"
+                        "pnpm run watch:windows"
                     ],
                     "shouldRunCommands": true
                 }

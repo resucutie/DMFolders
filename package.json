@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "description": "meep",
     "scripts": {
-        "build": "ittai --betterdiscord=\"C:/Users/auser/AppData/Roaming/BetterDiscord/plugins\"",
-        "watch": "ittai --betterdiscord=\"C:/Users/auser/AppData/Roaming/BetterDiscord/plugins\" --watch",
-        "production": "ittai --betterdiscord=\"C:/Users/auser/AppData/Roaming/BetterDiscord/plugins\" --production"
+        "build:windows": "ittai --betterdiscord=\"%appdata%/BetterDiscord/plugins\"",
+        "watch:windows": "ittai --betterdiscord=\"%appdata%/BetterDiscord/plugins\" --watch",
+        "production:windows": "ittai --betterdiscord=\"%appdata%/BetterDiscord/plugins\" --production"
     },
     "author": "",
     "license": "MIT",
