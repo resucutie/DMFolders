@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "description": "meep",
     "scripts": {
-        "build:windows": "ittai --betterdiscord=\"%appdata%/BetterDiscord/plugins\"",
-        "watch:windows": "ittai --betterdiscord=\"%appdata%/BetterDiscord/plugins\" --watch",
-        "production:windows": "ittai --betterdiscord=\"%appdata%/BetterDiscord/plugins\" --production"
+        "build:windows": "ittai --betterdiscord=\"%appdata%/BetterDiscord/plugins\" --powercordv2 --goosemod",
+        "watch:windows": "ittai --betterdiscord=\"%appdata%/BetterDiscord/plugins\" --powercordv2 --goosemod --watch",
+        "production:windows": "ittai --betterdiscord=\"%appdata%/BetterDiscord/plugins\" --powercordv2 --goosemod --production"
     },
     "author": "",
     "license": "MIT",
