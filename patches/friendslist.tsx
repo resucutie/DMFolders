@@ -6,7 +6,7 @@ import { Users, Activities, Status, UserSettings } from "ittai/stores"
 import pinnedDMS from "../handlers/pinnedDMS"
 import openCategorySettings from "../utils/openCategorySettings"
 import type { UserObject } from "ittai"
-import { DiscordIcon, Flex, TooltipContainer } from "ittai/components"
+import { Button, DiscordIcon, Flex, TooltipContainer } from "ittai/components"
 import joinClasses from "../utils/joinClasses"
 
 // shulker box monster - fWhip
@@ -17,6 +17,7 @@ const FriendRow = webpack.findByDisplayName('FriendRow')
 const SectionTitle = webpack.findByDisplayName("SectionTitle")
 const { EmptyStateImage, default: EmptyState, EmptyStateText } = webpack.findByProps("EmptyStateImage")
 const { iconWrapper, clickable, icon } = webpack.findByProps("caret", "clickable")
+const { button } = webpack.findByProps("friendsEmpty")
 
 const IDENTIFIER = "DMCATEGORIES"
 
@@ -96,39 +97,42 @@ const DMFriendsRender = ({ category }: FriendsRenderProps) => {
         () => pinnedDMS.getUsers(category)
     , [category])
 
-    return userIDs.length !== 0 ? <>
-        <div>
-            <SectionTitle title={<Flex align={Flex.Align.CENTER}>
-                <b style={{ color: pinnedDMS.getColor(category), flexGrow: 1 }}>{category} – {userIDs.length}</b>
+    if (userIDs.length !== 0) {
+        return <>
+            <div>
+                <SectionTitle title={<Flex align={Flex.Align.CENTER}>
+                    <b style={{ color: pinnedDMS.getColor(category), flexGrow: 1 }}>{category} – {userIDs.length}</b>
 
-                <TooltipContainer text="Add a new person" position="bottom">
-                    <div className={joinClasses(iconWrapper, clickable)} onClick={openCategorySettings}>
-                        <DiscordIcon name="PersonAdd" type="none" className={icon} />
-                    </div>
-                </TooltipContainer>
-            </Flex>}/>
-        </div>
+                    <TooltipContainer text="Add a new person" position="bottom">
+                        <div className={joinClasses(iconWrapper, clickable)} onClick={() => openCategorySettings(category)}>
+                            <DiscordIcon name="PersonAdd" type="none" className={icon} />
+                        </div>
+                    </TooltipContainer>
+                </Flex>} />
+            </div>
 
-        <PeopleListSectionedNonLazy
-            renderRow={(mysteriousObject: MysteriousObject) => <FriendRow {...mysteriousObject}/>}
-            // searchQuery={"k"} //for some reason this does not work
-            statusSections={[
-                userIDs.map(userId => {
-                    const user = Users.getUser(userId) as UserObject
-                    // mocked identifier. according to devilbro (yes, ive actually listened to him) the friends list fetches
-                    return {
-                        activities: Activities.getActivities(user.id),
-                        isMobile: user.mobile,
-                        key: user.id,
-                        nickname: user.username,
-                        status: Status.getStatus(user.id),
-                        type: 1, //whats dis tbh
-                        user: user,
-                    } as MysteriousObject
-                })
-            ]}
-        />
-    </> : <>
+            <PeopleListSectionedNonLazy
+                renderRow={(mysteriousObject: MysteriousObject) => <FriendRow {...mysteriousObject} />}
+                // searchQuery={"k"} //for some reason this does not work
+                statusSections={[
+                    userIDs.map(userId => {
+                        const user = Users.getUser(userId) as UserObject
+                        // mocked identifier. according to devilbro (yes, ive actually listened to him) the friends list fetches
+                        return {
+                            activities: Activities.getActivities(user.id),
+                            isMobile: user.mobile,
+                            key: user.id,
+                            nickname: user.username,
+                            status: Status.getStatus(user.id),
+                            type: 1, //whats dis tbh
+                            user: user,
+                        } as MysteriousObject
+                    })
+                ]}
+            />
+        </>
+    } else {
+        return <>
             <EmptyState theme={UserSettings.theme}>
                 <EmptyStateImage {...{
                     "width": 415,
@@ -137,8 +141,10 @@ const DMFriendsRender = ({ category }: FriendsRenderProps) => {
                     "darkSrc": "/assets/b36c705f790dad253981f1893085015a.svg"
                 }} />
                 <EmptyStateText note={<>
-                    This category is empty. <a onClick={openCategorySettings}>Click here to add new people</a>
-                </>}/>
+                    Apparently this category does only have Wumpus.
+                </>} />
+                <Button onClick={() => openCategorySettings(category)} className={button}>Add person</Button>
             </EmptyState>
-    </>
+        </>
+    }
 }

@@ -171,7 +171,7 @@ export const MinimalistList = ({ category }: { category: string }) => {
                             )
                         })
                         : <Text style={{marginLeft: "8px"}}>
-                            There is nobody here currently. <a onClick={openCategorySettings}>Add a new person</a>.
+                            There is nobody here currently. <a onClick={() => openCategorySettings(category)}>Add a new person</a>.
                         </Text>
                     }
                 </div>
