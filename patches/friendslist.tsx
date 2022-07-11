@@ -3,11 +3,12 @@ import * as webpack from "ittai/webpack"
 import { React } from "ittai/webpack"
 import * as settings from "ittai/settings"
 import { Users, Activities, Status, UserSettings } from "ittai/stores"
-import pinnedDMS from "../handlers/pinnedDMS"
-import openCategorySettings from "../utils/openCategorySettings"
 import type { UserObject } from "ittai"
 import { Button, DiscordIcon, Flex, TooltipContainer } from "ittai/components"
+import pinnedDMS from "../handlers/pinnedDMS"
+import openCategorySettings from "../utils/openCategorySettings"
 import joinClasses from "../utils/joinClasses"
+import CategoryContextMenu from "../components/ContextMenus/Category"
 
 // shulker box monster - fWhip
 const { Item } = webpack.findByProps("Item")
@@ -55,10 +56,13 @@ export default function () {
         delete OgTabBarChildrens[OgTabBarChildrens.length - 1]
         const NewTabBarChildrens = []
         for (const categoryName of pinnedDMS.getCategories()) {
-            NewTabBarChildrens.push(<Item 
+            NewTabBarChildrens.push(<Item
                 id={`${IDENTIFIER}-${categoryName}`}
                 color={pinnedDMS.getColor(categoryName)}
-            >{categoryName}</Item>)
+                onContextMenu={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => webpack.ContextMenu.openContextMenu(e, () => <CategoryContextMenu category={categoryName} />)}
+            >
+                {categoryName}
+            </Item>)
         }
         props.children[3].props.children = [...OgTabBarChildrens, <Divider />, ...NewTabBarChildrens, <Divider />, AddFriendButton]
     })

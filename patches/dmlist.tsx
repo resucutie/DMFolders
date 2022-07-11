@@ -13,6 +13,7 @@ import * as constants from "../constants"
 //@ts-ignore
 import styles from "./dmlist.scss"
 import openCategorySettings from "../utils/openCategorySettings"
+import CategoryContextMenu from "../components/ContextMenus/Category"
 
 const ListSectionItem = webpack.findByDisplayName("ListSectionItem")
 const { DirectMessage } = webpack.findByProps("DirectMessage")
@@ -143,10 +144,10 @@ export const MinimalistList = ({ category }: { category: string }) => {
             setStreamerMode(value)
         };
 
-        Dispatcher.subscribe("MESSAGE_CREATE", messageCreateListener);
+        Dispatcher.subscribe("CHANNEL_UNREAD_UPDATE", messageCreateListener);
         Dispatcher.subscribe("STREAMER_MODE_UPDATE", streamerModeListener);
         return () => {
-            Dispatcher.unsubscribe("MESSAGE_CREATE", messageCreateListener)
+            Dispatcher.unsubscribe("CHANNEL_UNREAD_UPDATE", messageCreateListener)
             Dispatcher.unsubscribe("STREAMER_MODE_UPDATE", streamerModeListener)
         }
     }, []);
@@ -179,6 +180,7 @@ export const MinimalistList = ({ category }: { category: string }) => {
         </div>}>
             {(props) => <div {...props}
                 className={joinClasses(classes.DMButtons.channel, (searchClassNameModules("container-32HW5s") as any).container)}
+                onContextMenu={e => webpack.ContextMenu.openContextMenu(e, () => <CategoryContextMenu category={category} />)}
             >
                 <div className={joinClasses(
                         classes.DMButtons.interactive,
