@@ -11,6 +11,7 @@ import { React, Dispatcher } from "ittai/webpack"
 import Settings from "./components/Settings"
 import patchDmList from "./patches/dmlist"
 import patchDmButton from "./patches/dmbutton"
+import patchFriendsPage from "./patches/friendslist"
 import pinnedDMS from "./handlers/pinnedDMS"
 import * as constants from "./constants"
 
@@ -25,6 +26,7 @@ export default class DMFolders extends Plugin {
         
         patchDmList()
         patchDmButton()
+        patchFriendsPage()
 
         Dispatcher.subscribe("STREAMER_MODE_UPDATE", this.onStreamerModeChange)
     }

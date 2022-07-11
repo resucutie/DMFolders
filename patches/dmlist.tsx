@@ -3,7 +3,7 @@ import * as webpack from "ittai/webpack"
 import { React, Dispatcher } from "ittai/webpack"
 import { Channels, CurrentChannels, Users } from "ittai/stores"
 import { findInReactTree, searchClassNameModules } from "ittai/utilities"
-import { DiscordIcon, Flex, Modal, Popout } from "ittai/components"
+import { DiscordIcon, Flex, Modal, Popout, Text } from "ittai/components"
 import * as settings from "ittai/settings"
 
 import classes from "../utils/classes"
@@ -12,6 +12,7 @@ import joinClasses from "../utils/joinClasses"
 import * as constants from "../constants"
 //@ts-ignore
 import styles from "./dmlist.scss"
+import openCategorySettings from "../utils/openCategorySettings"
 
 const ListSectionItem = webpack.findByDisplayName("ListSectionItem")
 const { DirectMessage } = webpack.findByProps("DirectMessage")
@@ -154,20 +155,25 @@ export const MinimalistList = ({ category }: { category: string }) => {
         <Popout position={Popout.Positions.RIGHT} animation={Popout.Animation.NONE} renderPopout={(props) => <div {...props}>
             <Modal.ModalRoot transitionState={1} size={Modal.ModalSize.DYNAMIC}>
                 <div className={styles.minimalisticPopout}>
-                    {currentUsers.map((userId) => {
-                        const dmId = Channels.getDMFromUserId(userId)
-                        // console.log(Channels.getChannel(dmId), Channels.getChannel(dmId).recipients.includes("376493261755252736"))
-                        if (dmId == null) return null
+                    {currentUsers.length !== 0
+                        ? currentUsers.map((userId) => {
+                            const dmId = Channels.getDMFromUserId(userId)
+                            // console.log(Channels.getChannel(dmId), Channels.getChannel(dmId).recipients.includes("376493261755252736"))
+                            if (dmId == null) return null
 
-                        return (
-                            <DirectMessage key={dmId}
-                                channel={Channels.getChannel(dmId)}
-                                selected={
-                                    CurrentChannels.getChannelId() === dmId
-                                }
-                            />
-                        )
-                    })}
+                            return (
+                                <DirectMessage key={dmId}
+                                    channel={Channels.getChannel(dmId)}
+                                    selected={
+                                        CurrentChannels.getChannelId() === dmId
+                                    }
+                                />
+                            )
+                        })
+                        : <Text style={{marginLeft: "8px"}}>
+                            There is nobody here currently. <a onClick={openCategorySettings}>Add a new person</a>.
+                        </Text>
+                    }
                 </div>
             </Modal.ModalRoot>
         </div>}>

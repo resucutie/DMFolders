@@ -1,12 +1,12 @@
-import { React, ContextMenu as ContextMenuHandler, ModalActions } from "ittai/webpack"
+import { React, ContextMenu as ContextMenuHandler } from "ittai/webpack"
 import * as webpack from "ittai/webpack"
-import { ContextMenu, Flex, DiscordIcon, Modal, Heading } from "ittai/components"
+import { ContextMenu, Flex, DiscordIcon } from "ittai/components"
 import { Users } from "ittai/stores"
 import pinnedDMS from "../../handlers/pinnedDMS"
+import { UserID } from "ittai"
+import openCategorySettings from "../../utils/openCategorySettings"
 //@ts-ignore
 import styles from "./AddUser.scss"
-import { UserID } from "ittai"
-import UserListSettings from "../UserListSettings"
 
 const UserSummaryItem = webpack.findByDisplayName("UserSummaryItem")
 
@@ -33,15 +33,7 @@ export default function (props: {userId: UserID}) {
         <ContextMenu.MenuItem id="add"
             label="Configure categories"
             icon={() => <DiscordIcon name="Gear" type="contextmenu"/>}
-            action={() => ModalActions.openModal((props) => <Modal.ModalRoot {...props} size={Modal.ModalSize.MEDIUM}>
-                <Modal.ModalHeader separator={false}>
-                    <Heading variant="heading-lg/medium">Categories</Heading>
-                </Modal.ModalHeader>
-                <Modal.ModalContent>
-                    <UserListSettings />
-                    <div style={{ paddingBottom: "16px" }} />
-                </Modal.ModalContent>
-            </Modal.ModalRoot>)}
+            action={openCategorySettings}
         />
     </ContextMenu>
 }
