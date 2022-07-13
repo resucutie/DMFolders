@@ -100,7 +100,7 @@ export const UserCategory = ({ name, users, index, hidden = true }: CategoryProp
                     />
                 )) : <>
                     {
-                        Math.floor(Math.random() * 10) === 3 //easter egg woooooo
+                        Math.floor(Math.random() * 20) === 3 //easter egg woooooo
                             ? <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/tjs2xR2RZp0?controls=0" allow="clipboard-write; encrypted-media" />
                             : <div className={styles.empty}>
                                     <EmptyState theme={UserSettings.theme}>

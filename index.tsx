@@ -3,9 +3,10 @@
 import { Plugin } from "ittai/entities"
 import * as patcher from "ittai/patcher"
 //@ts-ignore internal usage only
-import { findInReactTree, searchClassNameModules, multiBenchmark } from "ittai/utilities"
+import { searchClassNameModules } from "ittai/utilities"
 import * as webpack from "ittai/webpack"
 import { React, Dispatcher } from "ittai/webpack"
+import { openChangelogModal } from "ittai/changelog"
 //@ts-ignore internal usage only
 
 import Settings from "./components/Settings"
@@ -20,6 +21,8 @@ let visibilityStorage: {[category: string]: boolean} = {}
 export default class DMFolders extends Plugin {
     start() {
         this.setSettingsPanel(() => <Settings />)
+
+        // openChangelogModal()
         
         //@ts-ignore internal usage only
         globalThis.searchClassNameModules = searchClassNameModules

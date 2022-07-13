@@ -30,7 +30,7 @@ export default function (props: {userId: UserID}) {
             />)}
         </ContextMenu.MenuGroup>
         <ContextMenu.MenuSeparator />
-        <ContextMenu.MenuItem id="add"
+        <ContextMenu.MenuItem id="configure"
             label="Configure categories"
             icon={() => <DiscordIcon name="Gear" type="contextmenu"/>}
             action={openCategorySettings}

@@ -44,7 +44,7 @@ export interface MysteriousObject {
 */
 export default function () {
     patcher.after("FriendsHeaderPatch", webpack.find(m => m?.default?.displayName === "HeaderBarContainer"), "default", ([props], res, _this) => {
-        console.log(props)
+        // console.log(props)
         if(
             Boolean(props.channelId) || // channel
             (!~props.className.indexOf("theme-")) //not friends list tab
