@@ -4,7 +4,7 @@ import { React } from "ittai/webpack"
 import * as settings from "ittai/settings"
 import { Users, Activities, Status, UserSettings } from "ittai/stores"
 import type { UserObject } from "ittai"
-import { Button, DiscordIcon, Flex, TooltipContainer } from "ittai/components"
+import { Button, DiscordIcon, Flex, SearchBar, TextInput, TooltipContainer } from "ittai/components"
 import pinnedDMS from "../handlers/pinnedDMS"
 import openCategorySettings from "../utils/openCategorySettings"
 import joinClasses from "../utils/joinClasses"
@@ -19,6 +19,7 @@ const SectionTitle = webpack.findByDisplayName("SectionTitle")
 const { EmptyStateImage, default: EmptyState, EmptyStateText } = webpack.findByProps("EmptyStateImage")
 const { iconWrapper, clickable, icon } = webpack.findByProps("caret", "clickable")
 const { button } = webpack.findByProps("friendsEmpty")
+const { searchBar } = webpack.findByProps("emptyStateContainer")
 
 const IDENTIFIER = "DMCATEGORIES"
 
@@ -97,29 +98,36 @@ interface FriendsRenderProps {
     category: string
 }
 const DMFriendsRender = ({ category }: FriendsRenderProps) => {
-    const userIDs = React.useMemo(
-        () => pinnedDMS.getUsers(category)
-    , [category])
+    const [search, setSearch] = React.useState("")
+    const userIDs = React.useMemo(() => pinnedDMS.getUsers(category), [category])
+    const searchedUserIDs = React.useMemo(() => userIDs.filter(id => ~Users.getUser(id).username.toLowerCase().indexOf(search.toLowerCase())), [search])
 
     if (userIDs.length !== 0) {
         return <>
+            <SearchBar
+                query={search}
+                onChange={setSearch}
+                onClear={() => setSearch("")}
+                className={searchBar}
+                size={SearchBar.Sizes.MEDIUM}
+            />
             <div>
-                <SectionTitle title={<Flex align={Flex.Align.CENTER}>
-                    <b style={{ color: pinnedDMS.getColor(category), flexGrow: 1 }}>{category} – {userIDs.length}</b>
+                <SectionTitle title={<Flex>
+                    <b style={{ color: pinnedDMS.getColor(category), flexGrow: 1 }}>{category} – {searchedUserIDs.length}</b>
 
                     <TooltipContainer text="Add a new person" position="bottom">
-                        <div className={joinClasses(iconWrapper, clickable)} onClick={() => openCategorySettings(category)}>
-                            <DiscordIcon name="PersonAdd" type="none" className={icon} />
+                        <div className={joinClasses(iconWrapper, clickable)} onClick={() => openCategorySettings(category)} style={{ width: "16px", height: "16px" }}>
+                            <DiscordIcon name="PersonAdd" type="none" />
                         </div>
                     </TooltipContainer>
                 </Flex>} />
             </div>
 
-            <PeopleListSectionedNonLazy
-                renderRow={(mysteriousObject: MysteriousObject) => <FriendRow {...mysteriousObject} />}
+            {searchedUserIDs.length !== 0 ? <PeopleListSectionedNonLazy
+                renderRow={(mysteriousObject: MysteriousObject) => <FriendRow {...Object.assign({}, mysteriousObject, {isFocused: true})} />}
                 // searchQuery={"k"} //for some reason this does not work
                 statusSections={[
-                    userIDs.map(userId => {
+                    searchedUserIDs.map(userId => {
                         const user = Users.getUser(userId) as UserObject
                         // mocked identifier. according to devilbro (yes, ive actually listened to him) the friends list fetches
                         return {
@@ -133,7 +141,18 @@ const DMFriendsRender = ({ category }: FriendsRenderProps) => {
                         } as MysteriousObject
                     })
                 ]}
-            />
+            /> : <EmptyState theme={UserSettings.theme}>
+                    <EmptyStateImage {...{
+                        "width": 421,
+                        "height": 218,
+                        "lightSrc": "/assets/fd879a28807b66b38d54e7db6ea18a69.svg",
+                        "darkSrc": "/assets/b36de980b174d7b798c89f35c116e5c6.svg"
+                    }} />
+                    <EmptyStateText note={<>
+                        Wumpus looked but couldn't find anyone with that name in this category.
+                    </>} />
+                    <Button onClick={() => openCategorySettings(category)} className={button}>Add a person with that name</Button>
+            </EmptyState>}
         </>
     } else {
         return <>
