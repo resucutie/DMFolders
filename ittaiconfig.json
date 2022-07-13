@@ -30,7 +30,6 @@
             "Current issues": {
                 "type": "fixed",
                 "items": [
-                    "**No searching!!!** I had to disable _(tbh, its better worded as \"not add\")_ the search functionality for the Friends list. Don't worry, I've made this one to only affect the ✨ custom tabs ✨. I've tried to do my own implementation, but it did took ages to update the member list.",
                     "**Uhhh... scrolling isn't still fixed.** Yeah, i need to figure it out (and when i say \"i\" i mean you guys that know how to code better than me)"
                 ]
             },
