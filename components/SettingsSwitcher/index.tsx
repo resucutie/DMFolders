@@ -1,6 +1,6 @@
 import * as webpack from "ittai/webpack"
 import { React } from "ittai/webpack"
-import { Modal, TextInput, Avatar, Flex, Text, Heading, Button } from "ittai/components";
+import { Modal, Text, Heading, Button } from "ittai/components";
 import { Margins } from "ittai/classes";
 import * as Importer from "../../handlers/importFromPlugin"
 import pinnedDMS from "../../handlers/pinnedDMS";

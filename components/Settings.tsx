@@ -14,11 +14,11 @@ export default function() {
     const [, forceUpdate] = React.useReducer((v) => !v, false)
 
     return <>
-        <Category title="Listed categories" description="Configure the folders and add or change the listed users">
+        <Category title="Listed categories" description="Configure the folders and add or change the listed users" icon="Person">
             <UserListSettings />
         </Category>
 
-        <Category title="Other settings" description="Other settings that you can tweak">
+        <Category title="Other settings" description="Other settings that you can tweak" icon="Gear">
             <Forms.FormSection>
                 <Forms.FormItem>
                     <Forms.FormTitle>Display mode</Forms.FormTitle>
