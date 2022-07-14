@@ -2,12 +2,10 @@
 
 import { Plugin } from "ittai/entities"
 import * as patcher from "ittai/patcher"
-//@ts-ignore internal usage only
 import { searchClassNameModules } from "ittai/utilities"
 import * as webpack from "ittai/webpack"
-import { React, Dispatcher } from "ittai/webpack"
-import { openChangelogModal } from "ittai/changelog"
-//@ts-ignore internal usage only
+import { React, Dispatcher, ModalActions } from "ittai/webpack"
+import * as Ittai from "ittai"
 
 import Settings from "./components/Settings"
 import patchDmList from "./patches/dmlist"
@@ -15,23 +13,29 @@ import patchDmButton from "./patches/dmbutton"
 import patchFriendsPage from "./patches/friendslist"
 import pinnedDMS from "./handlers/pinnedDMS"
 import * as constants from "./constants"
+import SettingsSwitcher from "./components/SettingsSwitcher"
+import { hasAnyOfThePlugins } from "./handlers/importFromPlugin"
 
 let visibilityStorage: {[category: string]: boolean} = {}
 
 export default class DMFolders extends Plugin {
     start() {
         this.setSettingsPanel(() => <Settings />)
-
-        // openChangelogModal()
         
         //@ts-ignore internal usage only
-        globalThis.searchClassNameModules = searchClassNameModules
+        globalThis.Ittai = Ittai
         
         patchDmList()
         patchDmButton()
         patchFriendsPage()
 
+        this.openSettingsSwitcher()
+
         Dispatcher.subscribe("STREAMER_MODE_UPDATE", this.onStreamerModeChange)
+    }
+
+    private openSettingsSwitcher() {
+        if(hasAnyOfThePlugins()) ModalActions.openModal((props) => <SettingsSwitcher {...props} />)
     }
 
     private onStreamerModeChange({value}: {value: boolean}) {
