@@ -1,4 +1,4 @@
 .swc
 node_modules
-.compiled
+.build
 pnpm-lock.yaml
