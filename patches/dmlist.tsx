@@ -199,7 +199,7 @@ export const MinimalistList = ({ category }: { category: string }) => {
                             <span style={{ color: pinnedDMS.getColor(category), fontWeight: "bold" }}>
                                 {category}
                             </span>
-                            {!isStreamerModeEnabled && settings.get("minimal.userIcons", constants.Settings.DefaultSettings.MinimalistView.userIcons) && <UserSummaryItem
+                            {!isStreamerModeEnabled && settings.get("minimal_userIcons", constants.Settings.DefaultSettings.MinimalistView.userIcons) && <UserSummaryItem
                                 size={USER_ICON_SIZE}
                                 users={pinnedDMS.getUsers(category).map(userId => Users.getUser(userId))}
                             />}

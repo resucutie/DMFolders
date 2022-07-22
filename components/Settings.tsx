@@ -59,9 +59,9 @@ const OtherView = () => {
 
             {settings.get("display", constants.Settings.DefaultSettings.DISPLAY_MODE) === constants.Settings.DefaultSettings.MinimalistView.settingsValue && <Category title="Minimalist view settings" description="Additional configuration for the Minimalist View">
                 <SwitchItem
-                    value={settings.get("minimal.userIcons", constants.Settings.DefaultSettings.MinimalistView.userIcons)}
+                    value={settings.get("minimal_userIcons", constants.Settings.DefaultSettings.MinimalistView.userIcons)}
                     onChange={(e) => {
-                        settings.set("minimal.userIcons", e)
+                        settings.set("minimal_userIcons", e)
                         Dispatcher.dirtyDispatch({ type: constants.DISPATCHER_PINDMS_CHANGE_LIST })
                     }}
                 >Show user icons</SwitchItem>
