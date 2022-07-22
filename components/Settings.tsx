@@ -3,7 +3,7 @@ import { Dispatcher, React, ModalActions } from "ittai/webpack"
 import { Category, SwitchItem, Forms, Button, Flex, RadioGroup, Modal, Heading, Text, TabBar } from "ittai/components"
 import { TabBar as TabBarClass } from "ittai/classes"
 import { joinClasses } from "ittai/utilities"
-import CategoriesView from "./UserListSettings"
+import CategoriesView, { CreateCategory } from "./UserListSettings"
 import * as settings from "ittai/settings"
 import * as toast from "ittai/toast"
 import * as constants from "../constants"
@@ -30,7 +30,10 @@ export default function() {
             </TabBar.Item>
         </TabBar>
 
-        {tab === Tabs.CATEGORIES && <CategoriesView />}
+        {tab === Tabs.CATEGORIES && <>
+            <CreateCategory />
+            <CategoriesView />
+        </>}
         {tab === Tabs.OTHER && <OtherView />}
     </>
 }
