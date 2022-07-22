@@ -1,0 +1,26 @@
+.friendsList {
+    margin-top: 20px;
+
+    .image {
+        width: 650px;
+        height: 150px;
+        margin-bottom: -30px;
+        position: relative;
+        background: url("https://media.discordapp.net/attachments/539180316447997974/996963538864181258/unknown.png");
+
+        &::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            z-index: 1;
+            background: linear-gradient(180deg, transparent, var(--modal-background));
+        }
+    }
+
+    .textHeading {
+        z-index: 2;
+    }
+}

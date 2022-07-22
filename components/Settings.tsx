@@ -3,6 +3,7 @@ import { Category, SwitchItem, Forms, Button, Flex, RadioGroup, Modal, Heading, 
 import UserListSettings from "./UserListSettings"
 import * as settings from "ittai/settings"
 import * as toast from "ittai/toast"
+import * as constants from "../constants"
 //@ts-ignore
 import styles from "./Settings.scss"
 import isValidJSON from "../utils/isValidJSON"
@@ -13,45 +14,51 @@ export default function() {
     const [, forceUpdate] = React.useReducer((v) => !v, false)
 
     return <>
-        <Category title="Listed folders" description="Configure the folders and add or change the listed users">
+        <Category title="Listed categories" description="Configure the folders and add or change the listed users" icon="Person">
             <UserListSettings />
         </Category>
 
-        <Category title="Other settings" description="Other settings that you can tweak">
+        <Category title="Other settings" description="Other settings that you can tweak" icon="Gear">
             <Forms.FormSection>
-                <SwitchItem
-                    value={settings.get("pinIcon", true)}
-                    onChange={(e) => settings.set("pinIcon", e)}
-                >Show pin icon</SwitchItem>
-
                 <Forms.FormItem>
                     <Forms.FormTitle>Display mode</Forms.FormTitle>
                     <RadioGroup
                         options={[
-                            { name: "Category", value: "category" },
-                            { name: "Minimalist", value: "minimal" }
+                            { name: "Category", value: constants.Settings.DefaultSettings.CategoryView.settingsValue },
+                            { name: "Minimalist", value: constants.Settings.DefaultSettings.MinimalistView.settingsValue }
                         ]}
-                        value={settings.get("display", "category")}
+                        value={settings.get("display", constants.Settings.DefaultSettings.DISPLAY_MODE)}
                         onChange={(v) => {
                             settings.set("display", v.value)
-                            Dispatcher.dirtyDispatch({ type: "PINDMS_CHANGE_LIST" })
+                            Dispatcher.dirtyDispatch({ type: constants.DISPATCHER_PINDMS_CHANGE_LIST })
                             forceUpdate()
                         }}
                     />
                     <Forms.FormDivider className={joinClasses(classes.Margins.marginBottom20, classes.Margins.marginTop20)} />
                 </Forms.FormItem>
 
-
-                {settings.get("display", "category") === "minimal" && <Forms.FormItem>
-                    <Forms.FormTitle>Minimalist view settings</Forms.FormTitle>
+                {settings.get("display", constants.Settings.DefaultSettings.DISPLAY_MODE) === constants.Settings.DefaultSettings.MinimalistView.settingsValue && <Category title="Minimalist view settings" description="Additional configuration for the Minimalist View">
                     <SwitchItem
-                        value={settings.get("minimal.userIcons", false)}
+                        value={settings.get("minimal.userIcons", constants.Settings.DefaultSettings.MinimalistView.userIcons)}
                         onChange={(e) => {
                             settings.set("minimal.userIcons", e)
-                            Dispatcher.dirtyDispatch({ type: "PINDMS_CHANGE_LIST" })
+                            Dispatcher.dirtyDispatch({ type: constants.DISPATCHER_PINDMS_CHANGE_LIST })
                         }}
                     >Show user icons</SwitchItem>
-                </Forms.FormItem>}
+                </Category>}
+
+                <SwitchItem
+                    value={settings.get("pinIcon", constants.Settings.DefaultSettings.PIN_ICON)}
+                    onChange={(e) => settings.set("pinIcon", e)}
+                    note="Adds an pin icon to the user so you can add it quickly to a category"
+                >Add a quick shortcut to add people on categories</SwitchItem>
+
+                <SwitchItem
+                    value={settings.get("streamerMode", constants.Settings.DefaultSettings.STREAMER_MODE)}
+                    onChange={(e) => settings.set("streamerMode", e)}
+                    note="When Streamer mode is enabled, it will automatically hide the categories"
+                >Hide users when Streamer mode is enabled</SwitchItem>
+
                 <Forms.FormItem>
                     <Forms.FormTitle>Export and import settings</Forms.FormTitle>
                     <Flex className={styles.buttonFlex}>

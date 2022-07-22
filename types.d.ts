@@ -5,8 +5,9 @@ export interface PinnedDMS {
 }
 
 export interface Category {
-    color ?: ColorHex
+    color?: ColorHex
     users: Array<import("ittai").UserID>
+    show?: boolean
 }
 
 export type ColorHex = `#${string}`

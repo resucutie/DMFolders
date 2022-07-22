@@ -19,50 +19,69 @@ import ChangeCategoryNameModal from "./Modals/CategorySettingsModal"
 import styles from "./index.scss"
 import joinClasses from "../../utils/joinClasses"
 import AddUserModal from "./Modals/AddUserModal"
+import { UserSettings } from "ittai/stores"
 
 const ListSectionItem = webpack.findByDisplayName("ListSectionItem")
+const { EmptyStateImage, default: EmptyState, EmptyStateText } = webpack.findByProps("EmptyStateImage")
 
-export default function () {
-    const [newCategory, setNewCategory] = React.useState<string>("")
+interface Props {
+    openedCategory?: string
+    showAddCategoryButton?: boolean
+}
+export default function ({ openedCategory, showAddCategoryButton = true }: Props) {
     useListUpdate()
     // console.log(ColorPicker)
 
     return (
         <>
-            <Flex className={styles.createCategory}>
-                <TextInput className={styles.textbox}
-                    value={newCategory}
-                    placeholder="Name a new category"
-                    onChange={(e) => setNewCategory(e)}
-                />
-                <Button onClick={() => pinnedDMS.addCategory(newCategory)}>
-                    Add
-                </Button>
-            </Flex>
-
+            {showAddCategoryButton && <CreateCategory />}
             {Object.entries(pinnedDMS.getAll()).map(
                 ([category, { users }], index) => (
-                    <UserCategory name={category} users={users} index={index} />
+                    <UserCategory name={category} users={users} index={index} hidden={category !== openedCategory} />
                 )
             )}
         </>
     )
 }
 
+export const CreateCategory = () => {
+    const [newCategory, setNewCategory] = React.useState<string>("")
+    const [error, setError] = React.useState<string>("")
+
+    return <Flex className={styles.createCategory} align={Flex.Align.CENTER}>
+        <TextInput className={styles.textbox}
+            value={newCategory}
+            placeholder="Name a new category"
+            onChange={(e) => setNewCategory(e)}
+            error={error}
+        />
+        <Button onClick={() => {
+            if (newCategory == "") setError("Please give a name")
+            else {
+                setError("")
+                pinnedDMS.addCategory(newCategory)
+            }
+        }}>
+            Add
+        </Button>
+    </Flex>
+}
+
 interface CategoryProps {
     name: string
     users: string[]
-    index: number
+    index: number,
+    hidden?: boolean
 }
-export const UserCategory = ({ name, users, index }: CategoryProps) => {
-    const [hide, setHide] = React.useState<boolean>(true)
+export const UserCategory = ({ name, users, index, hidden = true }: CategoryProps) => {
+    const [hide, setHide] = React.useState<boolean>(hidden)
 
     return (
         <div key={name} className={styles.category}>
             <CategoryHeader {...{ name, index }} onHide={() => setHide(!hide)} hidden={hide} />
 
-            {!(users.length === 0 || hide) && <div className={joinClasses(styles.userList, classes.Scrolling.scrollerBase, classes.Scrolling.thin, classes.Scrolling.fade)}>
-                {users.map((id, index) => (
+            {!hide && <div className={joinClasses(styles.userList, classes.Scrolling.scrollerBase, classes.Scrolling.thin, classes.Scrolling.fade)}>
+                {users.length !== 0 ? users.map((id, index) => (
                     <User
                         id={id}
                         onMove={(updn) =>
@@ -79,7 +98,25 @@ export const UserCategory = ({ name, users, index }: CategoryProps) => {
                         disableUp={index === 0}
                         disableDown={index === users.length - 1}
                     />
-                ))}
+                )) : <>
+                    {
+                        Math.floor(Math.random() * 20) === 3 //easter egg woooooo
+                            ? <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/tjs2xR2RZp0?controls=0" allow="clipboard-write; encrypted-media" />
+                            : <div className={styles.empty}>
+                                    <EmptyState theme={UserSettings.theme}>
+                                        <EmptyStateImage {...{
+                                            "width": 376,
+                                            "height": 162,
+                                            "lightSrc": "/assets/02625ee29f851ec588c2020a88d82665.svg",
+                                            "darkSrc": "/assets/b5eb2f7d6b3f8cc9b60be4a5dcf28015.svg"
+                                        }} />
+                                        <EmptyStateText note={<>
+                                            This category is empty. Oh nevermind, there is Wumpus, but he is alone.
+                                        </>} />
+                                    </EmptyState>
+                            </div>
+                    }
+                </>}
             </div>}
         </div>
     )
@@ -115,7 +152,7 @@ const CategoryHeader = ({ name, index, hidden = false, onHide }: HeaderProps) =>
         </ListSectionItem>
 
         <Popout position={Popout.Positions.BOTTOM} renderPopout={(props) => <div {...props}>
-            <ChangeCategoryNameModal transitionState={1} onClose={props.closePopout} name={name} />
+            <ChangeCategoryNameModal transitionState={1} onClose={props.closePopout} category={name} />
         </div>}>
             {(popout) => <TooltipContainer text="Edit category">
                 <Button {...popout}

@@ -1,4 +1,42 @@
 {
-    "nerdfont": true,
-    "output": "./.compiled"
+    "manifest":  {
+        "name": "DMFolders",
+        "version": "0.4.0",
+        "license": "MIT",
+        "source": "https://github.com/abUwUser/DMFolders.git",
+        "updateUrl": "https://raw.githubusercontent.com/abUwUser/DMFolders/release/index.js",
+        "author": "A user",
+        "description": "Organize your DMs with folders"
+    },
+    "changelog": {
+        "date": "11 July 2022",
+        "contents": {
+            "New stuff": {
+                "type": "added",
+                "items": [
+                    "**The categories are also in the friends list!** If you ever wanted to categorize not just your DMs, but your friends as well, you can now do that with new brand ✨ custom tabs ✨ in your Friends list. Give life to your friendships by making them interactive!",
+                    "**cUsToMiZeD mEnUs FoR cAtEgOrIeS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!** Yes, I've added a context menu for when you right click a context menu. Because why not?",
+                    "**This page!** WOOOOOO~ I've took the time to add a new feature to Ittai to display changelogs"
+                ]
+            },
+            "\"\"\"\"\"\"\"\"\"\"Fixes\"\"\"\"\"\"\"\"\"\"": {
+                "type": "progress",
+                "items": [
+                    "**Clicking on the edit category button does not long crash.** To be honest, I've just made it to display an error message instead of just crashing. More info at your beloved 2GB bundler: https://git.catvibers.me/Ittai/ittai/pulls/13"
+                ]
+            },
+            "Current issues": {
+                "type": "fixed",
+                "items": [
+                    "**Uhhh... scrolling isn't still fixed.** Yeah, i need to figure it out (and when i say \"i\" i mean you guys that know how to code better than me)"
+                ]
+            },
+            "A message before you go": {
+                "type": "improved",
+                "items": [
+                    "Listen to this: https://www.youtube.com/watch?v=671TWa_2w6c"
+                ]
+            }
+        }
+    }
 }
