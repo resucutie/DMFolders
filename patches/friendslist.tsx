@@ -50,6 +50,7 @@ export default function () {
             Boolean(props.channelId) || // channel
             (!~props.className.indexOf("theme-")) //not friends list tab
         ) return
+        if (Object.keys(pinnedDMS.getAll()).length === 0) return
 
 
         const OgTabBarChildrens = props.children[3].props.children

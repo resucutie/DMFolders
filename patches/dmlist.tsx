@@ -24,6 +24,7 @@ const UserSummaryItem = webpack.findByDisplayName("UserSummaryItem")
 const USER_ICON_SIZE = 16
 
 export default function() {
+    console.log("a", DirectMessage)
     let PinDMSRender = () => <CurrentLists />
     //@ts-ignore
     PinDMSRender.displayName = "PinnedDMS"
@@ -33,16 +34,20 @@ export default function() {
     patcher.after("DMListPatch", webpack.find(m => m?.default?.displayName === "ConnectedPrivateChannelsList"), "default", ([props], res, _this) => {
         // console.log({props, res, _this})
         useListUpdate() //temporary, will remove later
+        if (Object.keys(pinnedDMS.getAll()).length === 0) return
         
         let PrivateChannelsList: {props: {children: React.ReactNode[], privateChannelIds: string[]}, type: any} = findInReactTree(res, (m: { type: { displayName: string } }) => m?.type?.displayName === "PrivateChannelsList") as any
         if (PrivateChannelsList == null) return
 
-        Object.values(pinnedDMS.getAll()).forEach(({users}) => {
+        Object.values(pinnedDMS.getAll())
+            .filter(category => category.users.length !== 0)
+            .forEach(({users}) => {
             const dmChannels = users.map(id => Channels.getDMFromUserId(id))
             PrivateChannelsList.props.privateChannelIds =
-                PrivateChannelsList.props.privateChannelIds.filter(
-                    (id) => !dmChannels.includes(id)
-                )
+                PrivateChannelsList.props.privateChannelIds.filter((id) => {
+                    // console.log({ dmChannels, doesInclude: dmChannels.includes(id)})
+                    return !dmChannels.includes(id)
+                })
         })
 
         const ogFunc = PrivateChannelsList.type.prototype.render
@@ -160,6 +165,7 @@ export const MinimalistList = ({ category }: { category: string }) => {
                         ? currentUsers.map((userId) => {
                             const dmId = Channels.getDMFromUserId(userId)
                             // console.log(Channels.getChannel(dmId), Channels.getChannel(dmId).recipients.includes("376493261755252736"))
+                            console.log(dmId)
                             if (dmId == null) return null
 
                             return (
