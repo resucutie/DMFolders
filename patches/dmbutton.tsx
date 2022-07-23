@@ -16,8 +16,8 @@ import AddUser from "../components/ContextMenus/AddUser"
 
 export default function () {
     patcher.after("DMButtonPatch", webpack.findByDisplayName("PrivateChannel").prototype, "render", (_, res, _this) => {
-        // console.log({ _this, res })
         const user: UserObject = _this.props.user
+        if(user == null) return //likely a guild channel
 
         const isAdded = pinnedDMS.isUserAdded(user.id)
 
