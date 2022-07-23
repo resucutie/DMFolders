@@ -14,7 +14,7 @@ import classes from "../utils/classes"
 
 const Tabs = {
     CATEGORIES: "CATEGORIES",
-    OTHER: "OTHER"
+    SETTINGS: "SETTINGS"
 }
 
 export default function() {
@@ -25,8 +25,8 @@ export default function() {
             <TabBar.Item id={Tabs.CATEGORIES} className={TabBarClass.tabBarItem}>
                 Categories
             </TabBar.Item>
-            <TabBar.Item id={Tabs.OTHER} className={TabBarClass.tabBarItem}>
-                Other
+            <TabBar.Item id={Tabs.SETTINGS} className={TabBarClass.tabBarItem}>
+                Settings
             </TabBar.Item>
         </TabBar>
 
@@ -34,7 +34,7 @@ export default function() {
             <CreateCategory />
             <CategoriesView />
         </>}
-        {tab === Tabs.OTHER && <OtherView />}
+        {tab === Tabs.SETTINGS && <OtherView />}
     </>
 }
 

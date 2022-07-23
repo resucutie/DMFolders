@@ -16,7 +16,7 @@ export const fromDevilbroPinDMs = () => {
     //@ts-ignore
     const DevilbroPinDMsData = globalThis.BdApi.getData("PinDMs", "all")
     const channelList = DevilbroPinDMsData.pinned[Users.getCurrentUser().id].channelList
-    console.log(Object.values(channelList))
+    // console.log(Object.values(channelList))
     let category: PinnedDMS = {}
     for (const dbCategory of Object.values(channelList) as DBCategory[]) {
         const userIDs = dbCategory.dms

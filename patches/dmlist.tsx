@@ -24,7 +24,7 @@ const UserSummaryItem = webpack.findByDisplayName("UserSummaryItem")
 const USER_ICON_SIZE = 16
 
 export default function() {
-    console.log("a", DirectMessage)
+    // console.log("a", DirectMessage)
     let PinDMSRender = () => <CurrentLists />
     //@ts-ignore
     PinDMSRender.displayName = "PinnedDMS"
