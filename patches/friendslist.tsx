@@ -50,6 +50,7 @@ export default function () {
             Boolean(props.channelId) || // channel
             (!~props.className.indexOf("theme-")) //not friends list tab
         ) return
+        if (Object.keys(pinnedDMS.getAll()).length === 0) return
 
 
         const OgTabBarChildrens = props.children[3].props.children
@@ -143,10 +144,10 @@ const DMFriendsRender = ({ category }: FriendsRenderProps) => {
                 ]}
             /> : <EmptyState theme={UserSettings.theme}>
                     <EmptyStateImage {...{
-                        "width": 421,
-                        "height": 218,
-                        "lightSrc": "/assets/fd879a28807b66b38d54e7db6ea18a69.svg",
-                        "darkSrc": "/assets/b36de980b174d7b798c89f35c116e5c6.svg"
+                        "width": 415,
+                        "height": 200,
+                        "lightSrc": "/assets/36c9a2fb7d0593a581a92373121c2848.svg",
+                        "darkSrc": "/assets/b36c705f790dad253981f1893085015a.svg"
                     }} />
                     <EmptyStateText note={<>
                         Wumpus looked but couldn't find anyone with that name in this category.

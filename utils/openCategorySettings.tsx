@@ -8,7 +8,7 @@ export default (openedCategory?: string) => {
             <CreateCategory />
         </Modal.ModalHeader>
         <Modal.ModalContent>
-            <UserListSettings {...{ openedCategory }} showAddCategoryButton={false} />
+            <UserListSettings {...{ openedCategory }}/>
             <div style={{ paddingBottom: "16px" }} />
         </Modal.ModalContent>
     </Modal.ModalRoot>)

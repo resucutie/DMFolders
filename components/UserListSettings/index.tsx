@@ -7,8 +7,11 @@ import {
     DiscordIcon,
     ColorPicker,
     Popout,
-    TooltipContainer
+    TooltipContainer,
+    Heading,
+    Text
 } from "ittai/components"
+import { UserSettings } from "ittai/stores"
 import pinnedDMS, { useListUpdate } from "../../handlers/pinnedDMS"
 import { moveObjectKey, moveArray } from "../../utils/move"
 import { ColorHex, PinnedDMS } from "../../types"
@@ -19,27 +22,31 @@ import ChangeCategoryNameModal from "./Modals/CategorySettingsModal"
 import styles from "./index.scss"
 import joinClasses from "../../utils/joinClasses"
 import AddUserModal from "./Modals/AddUserModal"
-import { UserSettings } from "ittai/stores"
 
 const ListSectionItem = webpack.findByDisplayName("ListSectionItem")
 const { EmptyStateImage, default: EmptyState, EmptyStateText } = webpack.findByProps("EmptyStateImage")
+const noCategoriesAddedClasses = webpack.findByProps("emptyCard", "itemCard")
 
 interface Props {
     openedCategory?: string
-    showAddCategoryButton?: boolean
 }
-export default function ({ openedCategory, showAddCategoryButton = true }: Props) {
+export default function ({ openedCategory }: Props) {
     useListUpdate()
     // console.log(ColorPicker)
 
     return (
         <>
-            {showAddCategoryButton && <CreateCategory />}
-            {Object.entries(pinnedDMS.getAll()).map(
-                ([category, { users }], index) => (
-                    <UserCategory name={category} users={users} index={index} hidden={category !== openedCategory} />
+            {Object.keys(pinnedDMS.getAll()).length !== 0
+                ? Object.entries(pinnedDMS.getAll()).map(
+                    ([category, { users }], index) => (
+                        <UserCategory name={category} users={users} index={index} hidden={category !== openedCategory} />
+                    )
                 )
-            )}
+                : <div className={noCategoriesAddedClasses.emptyCard}>
+                    <Heading variant="heading-md/medium" className={noCategoriesAddedClasses.emptyHeader}>Hello? Anybody here?</Heading>
+                    <Text className={noCategoriesAddedClasses.emptyText}>You can add categories by typing in the textbox above and hitting "Add"</Text>
+                </div>
+            }
         </>
     )
 }

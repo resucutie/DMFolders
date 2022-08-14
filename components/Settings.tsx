@@ -1,6 +1,9 @@
 import { Dispatcher, React, ModalActions } from "ittai/webpack"
-import { Category, SwitchItem, Forms, Button, Flex, RadioGroup, Modal, Heading, Text } from "ittai/components"
-import UserListSettings from "./UserListSettings"
+//@ts-ignore
+import { Category, SwitchItem, Forms, Button, Flex, RadioGroup, Modal, Heading, Text, TabBar } from "ittai/components"
+import { TabBar as TabBarClass } from "ittai/classes"
+import { joinClasses } from "ittai/utilities"
+import CategoriesView, { CreateCategory } from "./UserListSettings"
 import * as settings from "ittai/settings"
 import * as toast from "ittai/toast"
 import * as constants from "../constants"
@@ -8,68 +11,87 @@ import * as constants from "../constants"
 import styles from "./Settings.scss"
 import isValidJSON from "../utils/isValidJSON"
 import classes from "../utils/classes"
-import joinClasses from "../utils/joinClasses"
+
+const Tabs = {
+    CATEGORIES: "CATEGORIES",
+    SETTINGS: "SETTINGS"
+}
 
 export default function() {
+    const [tab, setTab] = React.useState(Tabs.CATEGORIES)
+
+    return <>
+        <TabBar onItemSelect={setTab} className={joinClasses(TabBarClass.tabBar, styles.noTopMargin)} look={TabBar.Looks.BRAND} type={TabBar.Types.TOP} selectedItem={tab}>
+            <TabBar.Item id={Tabs.CATEGORIES} className={TabBarClass.tabBarItem}>
+                Categories
+            </TabBar.Item>
+            <TabBar.Item id={Tabs.SETTINGS} className={TabBarClass.tabBarItem}>
+                Settings
+            </TabBar.Item>
+        </TabBar>
+
+        {tab === Tabs.CATEGORIES && <>
+            <CreateCategory />
+            <CategoriesView />
+        </>}
+        {tab === Tabs.SETTINGS && <OtherView />}
+    </>
+}
+
+const OtherView = () => {
     const [, forceUpdate] = React.useReducer((v) => !v, false)
 
     return <>
-        <Category title="Listed categories" description="Configure the folders and add or change the listed users" icon="Person">
-            <UserListSettings />
-        </Category>
+        <Forms.FormSection>
+            <Forms.FormItem>
+                <Forms.FormTitle>Display mode</Forms.FormTitle>
+                <RadioGroup
+                    options={[
+                        { name: "Category", value: constants.Settings.DefaultSettings.CategoryView.settingsValue },
+                        { name: "Minimalist", value: constants.Settings.DefaultSettings.MinimalistView.settingsValue }
+                    ]}
+                    value={settings.get("display", constants.Settings.DefaultSettings.DISPLAY_MODE)}
+                    onChange={(v) => {
+                        settings.set("display", v.value)
+                        Dispatcher.dirtyDispatch({ type: constants.DISPATCHER_PINDMS_CHANGE_LIST })
+                        forceUpdate()
+                    }}
+                />
+                <Forms.FormDivider className={joinClasses(classes.Margins.marginBottom20, classes.Margins.marginTop20)} />
+            </Forms.FormItem>
 
-        <Category title="Other settings" description="Other settings that you can tweak" icon="Gear">
-            <Forms.FormSection>
-                <Forms.FormItem>
-                    <Forms.FormTitle>Display mode</Forms.FormTitle>
-                    <RadioGroup
-                        options={[
-                            { name: "Category", value: constants.Settings.DefaultSettings.CategoryView.settingsValue },
-                            { name: "Minimalist", value: constants.Settings.DefaultSettings.MinimalistView.settingsValue }
-                        ]}
-                        value={settings.get("display", constants.Settings.DefaultSettings.DISPLAY_MODE)}
-                        onChange={(v) => {
-                            settings.set("display", v.value)
-                            Dispatcher.dirtyDispatch({ type: constants.DISPATCHER_PINDMS_CHANGE_LIST })
-                            forceUpdate()
-                        }}
-                    />
-                    <Forms.FormDivider className={joinClasses(classes.Margins.marginBottom20, classes.Margins.marginTop20)} />
-                </Forms.FormItem>
-
-                {settings.get("display", constants.Settings.DefaultSettings.DISPLAY_MODE) === constants.Settings.DefaultSettings.MinimalistView.settingsValue && <Category title="Minimalist view settings" description="Additional configuration for the Minimalist View">
-                    <SwitchItem
-                        value={settings.get("minimal.userIcons", constants.Settings.DefaultSettings.MinimalistView.userIcons)}
-                        onChange={(e) => {
-                            settings.set("minimal.userIcons", e)
-                            Dispatcher.dirtyDispatch({ type: constants.DISPATCHER_PINDMS_CHANGE_LIST })
-                        }}
-                    >Show user icons</SwitchItem>
-                </Category>}
-
+            {settings.get("display", constants.Settings.DefaultSettings.DISPLAY_MODE) === constants.Settings.DefaultSettings.MinimalistView.settingsValue && <Category title="Minimalist view settings" description="Additional configuration for the Minimalist View">
                 <SwitchItem
-                    value={settings.get("pinIcon", constants.Settings.DefaultSettings.PIN_ICON)}
-                    onChange={(e) => settings.set("pinIcon", e)}
-                    note="Adds an pin icon to the user so you can add it quickly to a category"
-                >Add a quick shortcut to add people on categories</SwitchItem>
+                    value={settings.get("minimal_userIcons", constants.Settings.DefaultSettings.MinimalistView.userIcons)}
+                    onChange={(e) => {
+                        settings.set("minimal_userIcons", e)
+                        Dispatcher.dirtyDispatch({ type: constants.DISPATCHER_PINDMS_CHANGE_LIST })
+                    }}
+                >Show user icons</SwitchItem>
+            </Category>}
 
-                <SwitchItem
-                    value={settings.get("streamerMode", constants.Settings.DefaultSettings.STREAMER_MODE)}
-                    onChange={(e) => settings.set("streamerMode", e)}
-                    note="When Streamer mode is enabled, it will automatically hide the categories"
-                >Hide users when Streamer mode is enabled</SwitchItem>
+            <SwitchItem
+                value={settings.get("pinIcon", constants.Settings.DefaultSettings.PIN_ICON)}
+                onChange={(e) => settings.set("pinIcon", e)}
+                note="Adds an pin icon to the user so you can add it quickly to a category"
+            >Add a quick shortcut to add people on categories</SwitchItem>
 
-                <Forms.FormItem>
-                    <Forms.FormTitle>Export and import settings</Forms.FormTitle>
-                    <Flex className={styles.buttonFlex}>
-                        <Button onClick={handleExport}>Export</Button>
-                        <Button color={Button.Colors.RED}
-                            onClick={handleImport}
-                        >Import</Button>
-                    </Flex>
-                </Forms.FormItem>
-            </Forms.FormSection>
-        </Category>
+            <SwitchItem
+                value={settings.get("streamerMode", constants.Settings.DefaultSettings.STREAMER_MODE)}
+                onChange={(e) => settings.set("streamerMode", e)}
+                note="When Streamer mode is enabled, it will automatically hide the categories"
+            >Hide users when Streamer mode is enabled</SwitchItem>
+
+            <Forms.FormItem>
+                <Forms.FormTitle>Export and import settings</Forms.FormTitle>
+                <Flex className={styles.buttonFlex}>
+                    <Button onClick={handleExport}>Export</Button>
+                    <Button color={Button.Colors.RED}
+                        onClick={handleImport}
+                    >Import</Button>
+                </Flex>
+            </Forms.FormItem>
+        </Forms.FormSection>
     </>
 }
 
