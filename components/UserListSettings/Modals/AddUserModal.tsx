@@ -5,9 +5,9 @@ import { Channels, Users } from "ittai/stores";
 import pinnedDMS from "../../../handlers/pinnedDMS";
 import classes from "../../../utils/classes"
 //@ts-ignore
-import styles from "./AddUserModal.scss"
+import styles from "./AddUserModal.mod.scss"
 //@ts-ignore
-import categoryStyles from "./CategorySettingsModal.scss"
+import categoryStyles from "./CategorySettingsModal.mod.scss"
 import limit from "../../../utils/limit";
 import { UserID, UserObject } from "ittai";
 import joinClasses from "../../../utils/joinClasses";

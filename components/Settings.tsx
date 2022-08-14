@@ -1,6 +1,6 @@
 import { Dispatcher, React, ModalActions } from "ittai/webpack"
 //@ts-ignore
-import { Category, SwitchItem, Forms, Button, Flex, RadioGroup, Modal, Heading, Text, TabBar } from "ittai/components"
+import { Category, SwitchItem, Forms, Button, Flex, RadioGroup, Modal, Heading, Text, TabBar, TooltipContainer, DiscordIcon } from "ittai/components"
 import { TabBar as TabBarClass } from "ittai/classes"
 import { joinClasses } from "ittai/utilities"
 import CategoriesView, { CreateCategory } from "./UserListSettings"
@@ -8,9 +8,10 @@ import * as settings from "ittai/settings"
 import * as toast from "ittai/toast"
 import * as constants from "../constants"
 //@ts-ignore
-import styles from "./Settings.scss"
+import styles from "./Settings.mod.scss"
 import isValidJSON from "../utils/isValidJSON"
 import classes from "../utils/classes"
+import pinnedDMS from "../handlers/pinnedDMS"
 
 const Tabs = {
     CATEGORIES: "CATEGORIES",
@@ -53,6 +54,10 @@ const OtherView = () => {
                     value={settings.get("display", constants.Settings.DefaultSettings.DISPLAY_MODE)}
                     onChange={(v) => {
                         settings.set("display", v.value)
+                        
+                        pinnedDMS.getCategories().forEach(category => pinnedDMS.setVisibility(category, true))
+
+                        //update everything
                         Dispatcher.dirtyDispatch({ type: constants.DISPATCHER_PINDMS_CHANGE_LIST })
                         forceUpdate()
                     }}
@@ -60,21 +65,36 @@ const OtherView = () => {
                 <Forms.FormDivider className={joinClasses(classes.Margins.marginBottom20, classes.Margins.marginTop20)} />
             </Forms.FormItem>
 
-            {settings.get("display", constants.Settings.DefaultSettings.DISPLAY_MODE) === constants.Settings.DefaultSettings.MinimalistView.settingsValue && <Category title="Minimalist view settings" description="Additional configuration for the Minimalist View">
-                <SwitchItem
-                    value={settings.get("minimal_userIcons", constants.Settings.DefaultSettings.MinimalistView.userIcons)}
-                    onChange={(e) => {
-                        settings.set("minimal_userIcons", e)
-                        Dispatcher.dirtyDispatch({ type: constants.DISPATCHER_PINDMS_CHANGE_LIST })
-                    }}
-                >Show user icons</SwitchItem>
-            </Category>}
+            {settings.get("display", constants.Settings.DefaultSettings.DISPLAY_MODE) === constants.Settings.DefaultSettings.MinimalistView.settingsValue &&
+                <Category title="Minimalist view settings" description="Additional configuration for the Minimalist View">
+                    <SwitchItem
+                        value={settings.get("minimal_userIcons", constants.Settings.DefaultSettings.MinimalistView.userIcons)}
+                        onChange={(e) => {
+                            settings.set("minimal_userIcons", e)
+                            Dispatcher.dirtyDispatch({ type: constants.DISPATCHER_PINDMS_CHANGE_LIST })
+                        }}
+                    >Show user icons</SwitchItem>
+                </Category>
+            }
 
             <SwitchItem
                 value={settings.get("pinIcon", constants.Settings.DefaultSettings.PIN_ICON)}
                 onChange={(e) => settings.set("pinIcon", e)}
                 note="Adds an pin icon to the user so you can add it quickly to a category"
             >Add a quick shortcut to add people on categories</SwitchItem>
+
+            <SwitchItem
+                value={settings.get("friendsPage", constants.Settings.DefaultSettings.PIN_ICON)}
+                onChange={(e) => settings.set("friendsPage", e)}
+                note="Add custom tabs to the friends page"
+            >
+                <Flex align={Flex.Align.CENTER}>
+                    Tabs to the friends page
+                    <TooltipContainer tooltipClassName={styles.tooltip} className={styles.tooltipWrapper} text={<img src={"https://cdn.discordapp.com/attachments/539180316447997974/1001574025010626580/unknown.png"}/>}>
+                        <DiscordIcon name={"Info"}/>
+                    </TooltipContainer>
+                </Flex>
+            </SwitchItem>
 
             <SwitchItem
                 value={settings.get("streamerMode", constants.Settings.DefaultSettings.STREAMER_MODE)}

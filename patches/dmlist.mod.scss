@@ -1,0 +1,50 @@
+.categoryViewWrapper {
+    opacity: .7;
+    
+    &:hover {
+        opacity: 1;
+
+        .icon, .name {
+            color: unset
+        }
+    }
+
+    &:not(.open) .icon {
+        transform: rotate(-90deg);
+    }
+}
+
+.wrapper {
+    margin: 4px 0;
+    margin-left: 8px;
+    padding: 4px 0;
+    border-top: 1px solid var(--background-modifier-accent);
+    border-bottom: 1px solid var(--background-modifier-accent);
+
+    & > * {
+        margin-left: 0;
+    }
+}
+
+.minimalisticPopout {
+    padding: 16px;
+    padding-left: 8px;
+    background: var(--background-tertiary);
+    min-width: 224px
+}
+
+.minimalisticView {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    display: flex;
+    width: 100%;
+
+    .nameAndUsers {
+        gap: 4px;
+        flex-grow: 2 !important;
+
+        span {
+            opacity: .7;
+        }
+    }
+}

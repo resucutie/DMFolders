@@ -11,7 +11,7 @@ import pinnedDMS, {useListUpdate} from "../handlers/pinnedDMS"
 import joinClasses from "../utils/joinClasses"
 import * as constants from "../constants"
 //@ts-ignore
-import styles from "./dmlist.scss"
+import styles from "./dmlist.mod.scss"
 import openCategorySettings from "../utils/openCategorySettings"
 import CategoryContextMenu from "../components/ContextMenus/Category"
 
@@ -20,6 +20,7 @@ const { DirectMessage } = webpack.findByProps("DirectMessage")
 const { NumberBadge } = webpack.findByProps("NumberBadge")
 const { getMentionCount } = webpack.findByProps("getMentionCount")
 const UserSummaryItem = webpack.findByDisplayName("UserSummaryItem")
+const VoiceUserCount = webpack.findByDisplayName("VoiceUserCount")
 
 const USER_ICON_SIZE = 16
 
@@ -131,29 +132,25 @@ export const CategoryList = ({category}: {category: string}) => {
 const getPingCount = (currentUsers: string[]) => currentUsers.map(userId => Channels.getDMFromUserId(userId)).reduce((acc, channelId) => acc + getMentionCount(channelId), 0)
 
 export const MinimalistList = ({ category }: { category: string }) => {
+    const [, forceUpdate] = React.useReducer(a => !a, true)
     const currentUsers = React.useMemo(() => pinnedDMS.getUsers(category), [])
     const isCurrentChannel = React.useMemo(() => {
         return currentUsers.some((userId) => CurrentChannels.getChannelId() === Channels.getDMFromUserId(userId))
     }, [])
 
     const [pingCount, setPingCount] = React.useState<number>(getPingCount(currentUsers))
-    const [isStreamerModeEnabled, setStreamerMode] = React.useState<boolean>(false)
-
+    const shouldShowUsers = pinnedDMS.getVisibility(category) && settings.get("minimal_userIcons", constants.Settings.DefaultSettings.MinimalistView.userIcons)
 
     React.useEffect(() => {
         const messageCreateListener = ({channelId}: any) => {
             if (currentUsers.some((userId) => channelId === Channels.getDMFromUserId(userId))) setPingCount(getPingCount(currentUsers))
         };
 
-        const streamerModeListener = ({ value }: { value: boolean }) => {
-            setStreamerMode(value)
-        };
-
         Dispatcher.subscribe("CHANNEL_UNREAD_UPDATE", messageCreateListener);
-        Dispatcher.subscribe("STREAMER_MODE_UPDATE", streamerModeListener);
+        Dispatcher.subscribe("STREAMER_MODE_UPDATE", forceUpdate);
         return () => {
             Dispatcher.unsubscribe("CHANNEL_UNREAD_UPDATE", messageCreateListener)
-            Dispatcher.unsubscribe("STREAMER_MODE_UPDATE", streamerModeListener)
+            Dispatcher.unsubscribe("STREAMER_MODE_UPDATE", forceUpdate);
         }
     }, []);
 
@@ -196,10 +193,11 @@ export const MinimalistList = ({ category }: { category: string }) => {
                     )}>
                     <div className={joinClasses(classes.Names.layout, styles.minimalisticView)}>
                         <Flex direction={Flex.Direction.VERTICAL} className={styles.nameAndUsers}>
-                            <span style={{ color: pinnedDMS.getColor(category), fontWeight: "bold" }}>
-                                {category}
-                            </span>
-                            {!isStreamerModeEnabled && settings.get("minimal_userIcons", constants.Settings.DefaultSettings.MinimalistView.userIcons) && <UserSummaryItem
+                            <Flex>
+                                <span style={{ color: pinnedDMS.getColor(category), fontWeight: "bold", flexGrow: 1}}>{category}</span>
+                                {!shouldShowUsers && <VoiceUserCount userCount={pinnedDMS.getUsers(category).length}/>}
+                            </Flex>
+                            {shouldShowUsers && <UserSummaryItem
                                 size={USER_ICON_SIZE}
                                 users={pinnedDMS.getUsers(category).map(userId => Users.getUser(userId))}
                             />}

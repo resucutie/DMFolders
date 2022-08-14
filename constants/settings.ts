@@ -11,6 +11,7 @@ export default {
         DISPLAY_MODE: CategoryView.settingsValue,
         MinimalistView,
         CategoryView,
+        FRIENDS_PAGE: true,
         PIN_ICON: true,
         STREAMER_MODE: true
     }

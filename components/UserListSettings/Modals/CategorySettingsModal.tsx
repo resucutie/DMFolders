@@ -1,14 +1,16 @@
 import * as webpack from "ittai/webpack"
 import { ColorHex, ColorUtils, Constants, React } from "ittai/webpack"
-import { Button, Modal, TextInput, Forms, ColorPicker, SwitchItem, Text, Anchor } from "ittai/components";
+import { Button, Modal, TextInput, Forms, ColorPicker, SwitchItem, Text, Anchor, Flex } from "ittai/components";
 import pinnedDMS from "../../../handlers/pinnedDMS";
 import classes from "../../../utils/classes"
 import * as constants from "../../../constants"
 import * as settings from "ittai/settings"
 //@ts-ignore
-import styles from "./CategorySettingsModal.scss"
+import styles from "./CategorySettingsModal.mod.scss"
 import ErrorBoundary from "../../../utils/ErrorBoundary";
-const { CustomColorButton } = webpack.findByProps("DefaultColorButton")
+
+const { RoleCircle } = webpack.findByProps("RoleCircle")
+const roleDotClasses = webpack.findByProps("roleDotLeft")
 
 export default function (modalProps: { transitionState: 1 | 2 | 3, onClose: () => void, category: string}) {
     const [newName, setNewName] = React.useState(modalProps.category)
@@ -25,7 +27,11 @@ export default function (modalProps: { transitionState: 1 | 2 | 3, onClose: () =
         </Modal.ModalHeader>
         <Modal.ModalContent>
             <Forms.FormItem>
-                <Forms.FormTitle>Color</Forms.FormTitle>
+                <Forms.FormTitle>
+                    <Flex align={Flex.Align.CENTER}>
+                        <RoleCircle color={newColor} className={classes.Margins.marginLeft8} /> Color
+                    </Flex>
+                </Forms.FormTitle>
                 <div className={classes.Margins.marginBottom20}>
                     <ErrorBoundary
                         renderError={<Text color={Text.Colors.ERROR}>
@@ -52,9 +58,11 @@ export default function (modalProps: { transitionState: 1 | 2 | 3, onClose: () =
                 <SwitchItem
                     value={!pinnedDMS.getVisibility(modalProps.category)}
                     onChange={(e) => pinnedDMS.setVisibility(modalProps.category, !e)}
-                    disabled={settings.get('display', constants.Settings.DefaultSettings.DISPLAY_MODE) === constants.Settings.DefaultSettings.MinimalistView.settingsValue}
-                    note={settings.get('display', constants.Settings.DefaultSettings.DISPLAY_MODE) && "Disabled because it is using the Minimalist view"}
-                >Hide contents</SwitchItem>
+                >{
+                    settings.get('display', constants.Settings.DefaultSettings.DISPLAY_MODE) === constants.Settings.DefaultSettings.MinimalistView.settingsValue
+                        ? "Hide user preview"
+                        : "Hide user list"
+                }</SwitchItem>
             </Forms.FormItem>
         </Modal.ModalContent>
         <Modal.ModalFooter>

@@ -10,7 +10,7 @@ import { Avatar, DiscordIcon, TooltipContainer } from "ittai/components"
 import { Button, Text, Flex } from "ittai/components"
 import classes from "../../utils/classes"
 //@ts-ignore
-import styles from "./User.scss"
+import styles from "./User.mod.scss"
 import joinClasses from "../../utils/joinClasses"
 
 interface Props {

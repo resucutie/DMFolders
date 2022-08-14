@@ -19,7 +19,7 @@ import User from "./User"
 import classes from "../../utils/classes"
 import ChangeCategoryNameModal from "./Modals/CategorySettingsModal"
 //@ts-ignore
-import styles from "./index.scss"
+import styles from "./index.mod.scss"
 import joinClasses from "../../utils/joinClasses"
 import AddUserModal from "./Modals/AddUserModal"
 

@@ -3,14 +3,14 @@ import * as webpack from "ittai/webpack"
 const { React } = webpack
 import { Channels, CurrentChannels } from "ittai/stores"
 import { findInReactTree, searchClassNameModules } from "ittai/utilities"
-import { DiscordIcon, ContextMenu } from "ittai/components"
+import { DiscordIcon, ContextMenu, Popout } from "ittai/components"
 import * as settings from "ittai/settings"
 import pinnedDMS, { useListUpdate } from "../handlers/pinnedDMS"
 import { UserObject } from "ittai";
 import * as constants from "../constants"
 
 //@ts-ignore
-import styles from "./dmbutton.scss"
+import styles from "./dmbutton.mod.scss"
 import joinClasses from "../utils/joinClasses"
 import AddUser from "../components/ContextMenus/AddUser"
 
@@ -40,17 +40,15 @@ export default function () {
 
                 if (settings.get("pinIcon", constants.Settings.DefaultSettings.PIN_ICON)) {    
                     Interactive.props.children.splice(1, 0, <div className={joinClasses(styles.pinButton, isAdded ? styles.lonely : "")}
-                        onClick={(e) => {
-                            // console.log(ContextMenu)
-                            if (isAdded) {
-                                pinnedDMS.removeUser(pinnedDMS.getUserCategory(user.id)!, user.id)
-                            } else {
-                                //@ts-ignore
-                                webpack.ContextMenu.openContextMenu(e, () => <AddUser userId={user.id}/>)
-                            }
-                        }}
+                        onClick={(e) => {if (isAdded) pinnedDMS.removeUser(pinnedDMS.getUserCategory(user.id)!, user.id)}}
                     >
-                        {!isAdded ? <DiscordIcon name="PinLayer" /> : <DiscordIcon name="UnpinLayer" />}
+                        {!isAdded 
+                            ? <Popout renderPopout={() => <AddUser userId={user.id} />} position={Popout.Positions.RIGHT}>
+                                {props => <span {...props}>
+                                    <DiscordIcon name="PinLayer" />
+                                </span>}
+                            </Popout>
+                            : <DiscordIcon name="UnpinLayer" />}
                     </div>)
                 }
 

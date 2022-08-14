@@ -1,11 +1,11 @@
-import { React, ContextMenu as ContextMenuHandler } from "ittai/webpack"
+import { React, ContextMenuManager } from "ittai/webpack"
 import { Button, ContextMenu } from "ittai/components"
 import { messageBox } from "ittai/utilities"
 import openCategorySettings from "../../utils/openCategorySettings"
 import pinnedDMS from "../../handlers/pinnedDMS"
 
 export default function (props: { category: string }) {
-    return <ContextMenu navId={"pin-user"} onClose={ContextMenuHandler.closeContextMenu}>
+    return <ContextMenu navId={"pin-user"} onClose={ContextMenuManager.closeContextMenu}>
         <ContextMenu.MenuItem id="edit"
             label="Edit category"
             action={() => openCategorySettings(props.category)}
