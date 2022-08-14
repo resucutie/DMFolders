@@ -1,0 +1,1 @@
+export default <Type>(array: Type[], limit = 50, from = 0): Type[] => array.slice(from, from + limit)

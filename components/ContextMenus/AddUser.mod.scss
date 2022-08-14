@@ -1,0 +1,9 @@
+.text {
+    font-weight: bold;
+    margin-right: auto;
+}
+
+[id^="pin-user-"]:hover .text {
+    color: #fff !important;
+    font-weight: 600
+}

@@ -1,0 +1,39 @@
+.createCategory {
+    gap: 10px;
+
+    .textbox {
+        flex-grow: 2;
+    }
+}
+
+.dropdownArrow {
+    width: 16px !important;
+    height: 16px !important;
+    margin-right: 4px;
+
+    &.hidden {
+        transform: rotate(-90deg);
+    }
+}
+
+.exampleListSectionItem {
+    padding: 0;
+    width: auto;
+    flex: unset;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.userList {
+    background: var(--background-secondary-alt);
+    margin-top: 10px;
+    padding-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden auto;
+    max-height: 40vh;
+    position: relative;
+
+    .empty {
+        margin-top: 20px;
+    }
+}

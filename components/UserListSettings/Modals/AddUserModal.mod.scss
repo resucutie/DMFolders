@@ -1,0 +1,29 @@
+.userGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+
+    .user {
+        gap: 4px;
+        border-radius: 4px;
+        padding: 4px;
+        cursor: pointer;
+
+        &:hover {
+            background: var(--background-modifier-hover);
+        }
+
+        &.disabled {
+            opacity: 0.4;
+
+            cursor: not-allowed;
+        }
+
+        .name {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    }
+}

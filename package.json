@@ -1,0 +1,18 @@
+{
+    "name": "dmfolders",
+    "version": "1.0.0",
+    "description": "meep",
+    "main": "index.tsx",
+    "scripts": {
+        "build": "ittai --betterdiscord=\"./.build/betterdiscord\" --powercordv2=\"./.build/powercord\" --goosemod=\"./.build/goosemod\"",
+        "watch:windows": "ittai --betterdiscord=\"%appdata%/BetterDiscord/plugins\" --watch",
+        "production": "ittai --betterdiscord=\"./.build/betterdiscord\" --powercordv2=\"./.build/powercord\" --goosemod=\"./.build/goosemod\""
+    },
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "@types/react": "^18.0.11",
+        "ittai": "^2.0.0",
+        "sass": "^1.53.0"
+    }
+}

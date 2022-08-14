@@ -1,0 +1,22 @@
+{
+    "restoreTerminals.terminals": [
+        {
+            "splitTerminals": [
+                {
+                    "name": "build",
+                    "commands": [
+                        "pnpm run watch:windows"
+                    ],
+                    "shouldRunCommands": true
+                }
+            ]
+        },
+        {
+            "splitTerminals": [
+                {
+                    "name": "terminal",
+                }
+            ]
+        }
+    ]
+}
