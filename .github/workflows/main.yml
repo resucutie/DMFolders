@@ -12,11 +12,13 @@ jobs:
         uses: docker://registry.catvibers.me/ittai/builder
         with:
           entrypoint: sh
-          args: -c "cd src && pnpm i && ittai --plugin="./" --betterdiscord="../betterdiscord" --powercordv2="../powercord" --goosemod="../goosemod" --production && rm -rf ./node_modules ./.swc"
+          args: -c "cd src && pnpm i && ittai --plugin="./" --betterdiscord=../dist --powercordv2=../dist --goosemod=../dist/goosemod --production && rm -rf ./node_modules"
           # rm is a hack to make github actions permissions function
       - name: Prepare to push
-        # TODO remove RUNNER_TEMP hack
         run: |
+          sudo chown -R runner:runner ./
+          mv ./dist/* .
+          rm -r ./dist
           cp ./src/README* . || true
           cp ./src/LICENSE* . || true
           rm -rf ./src
@@ -29,5 +31,5 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: release
+          branch: relase
           force: true
