@@ -11,7 +11,7 @@
     "changelog": {
         "date": "22 July 2022",
         "contents": {
-            "OMG 0.5.0": {
+            "OMG 1.0.0": {
                 "type": "added",
                 "items": [
                     "**Now it is separated by tabs instead of categories.** Somewhat i forgot that tabs are a thing in discord. Found out when they added a \"Server Profiles\" tab.",
